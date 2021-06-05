@@ -1,28 +1,28 @@
 Structures of files&folders
 
 main
-├setup
-│├setings
-│├
-│└
+├───setup
+│	├setings
+│	├
+│	└
 │
-├modules
-│├r/w_xlsx.py
-│├set_format.py
-│├check_chars.py
-│└check_doubles.py
+├───modules
+│	├r/w_xlsx.py
+│	├set_format.py
+│	├check_chars.py
+│	└check_doubles.py
 │
-├files
-│├f_source.xlsx
-│├f_4_fill.xlsx
-│├f_4_pass.xlsx
-│├f_err_
-││	├f_err_dev.xlsx
-││	├f_err_rfid.xlsx
-││	└f_err_coord
-││
-│└f_doubles.xlsx
+├───files
+│	├f_source.xlsx
+│	├f_4_fill.xlsx
+│	├f_4_pass.xlsx
+│	├f_err_
+│	│	├f_err_dev.xlsx
+│	│	├f_err_rfid.xlsx
+│	│	└f_err_coord
+│	│
+│	└f_doubles.xlsx
 │
-└logs
- ├
- └
+└───logs
+	├
+	└

@@ -2,3 +2,4 @@ LICENSE
 
 files/
 logs/
+*pycache*

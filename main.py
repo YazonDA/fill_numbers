@@ -21,10 +21,20 @@ path_modul = path_main + parser["PATH"]["modules"]
 path_file = path_main + parser["PATH"]["files"]
 
 file_log = path_log + 'tmp_log'
+file_source = path_file + parser['FILES']['f_source']
+file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
+file_4_fill = path_file + parser['FILES']['f_4_fill']
+file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
+file_4_pass = path_file + parser['FILES']['f_4_pass']
+file_err_dev = path_file + parser['FILES']['f_err_dev']
+file_err_rfid = path_file + parser['FILES']['f_err_rfid']
+file_err_coord = path_file + parser['FILES']['f_err_coord']
+
 
 cols_order = ['QR код контроллера', 'Координата Х WGS84', 'Координата Y WGS84', 'ID опоры', 'RFID значение метки на опоре', 'Организация', 'N сектора', '№ ШУНО', 'Положение светильника относительно дороги', 'Положение светильника на опоре', 'Марки светильников, установленных на опоре (БД Моссвет)', 'Муниципальный округ (БД Моссвет)', 'Административный округ (БД Моссвет)', 'Улица (БД Моссвет)', 'Ориентир (БД Моссвет)']
 cols_add = ['N сектора', '№ ШУНО']
 cols_rename = ['DevEUI', 'Координата Y WGS84, широта', 'Координата Х WGS84, долгота', 'ID опоры', 'RFID значение метки на опоре', 'Сектор / Организация', 'N сектора', '№ ШУНО', 'Положение светильника относительно дороги', 'Положение светильника на опоре', 'Марки светильников, установленных на опоре (БД Моссвет)', 'Муниципальный округ (БД Моссвет)', 'Административный округ (БД Моссвет)', 'Улица (БД Моссвет)', 'Ориентир (БД Моссвет)']
+
 # ============== SET LOGGER ===============
 
 
@@ -39,14 +49,13 @@ logging.basicConfig(filename=file_log,
 def main():
 	logging.info('Module is started!')
 
-	tmp_name = path_file + 'tst_f_source.xlsx'
-	tmp_df = read_xlsx(tmp_name)
+	df_4_fill = read_xlsx(file_source)
 
-	tmp_df = columns_add(tmp_df, cols_add)
-	tmp_df = columns_order(tmp_df, cols_order)
-	tmp_df = columns_rename(tmp_df, cols_rename)
+	df_4_fill = columns_add(df_4_fill, cols_add)
+	df_4_fill = columns_order(df_4_fill, cols_order)
+	df_4_fill = columns_rename(df_4_fill, cols_rename)
 
-	write_xlsx(tmp_df, path_file + 'tst_f_4_fill.xlsx')
+	write_xlsx(df_4_fill, file_4_fill)
 
 	logging.info(f"Logging shutdown\n\n")
 	logging.shutdown()

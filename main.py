@@ -22,39 +22,35 @@ path_file = path_main + parser["PATH"]["files"]
 
 file_log = path_log + 'tmp_log'
 
+cols_order = ['QR код контроллера', 'Координата Х WGS84', 'Координата Y WGS84', 'ID опоры', 'RFID значение метки на опоре', 'Организация', 'N сектора', '№ ШУНО', 'Положение светильника относительно дороги', 'Положение светильника на опоре', 'Марки светильников, установленных на опоре (БД Моссвет)', 'Муниципальный округ (БД Моссвет)', 'Административный округ (БД Моссвет)', 'Улица (БД Моссвет)', 'Ориентир (БД Моссвет)']
+cols_add = ['N сектора', '№ ШУНО']
+cols_rename = ['DevEUI', 'Координата Y WGS84, широта', 'Координата Х WGS84, долгота', 'ID опоры', 'RFID значение метки на опоре', 'Сектор / Организация', 'N сектора', '№ ШУНО', 'Положение светильника относительно дороги', 'Положение светильника на опоре', 'Марки светильников, установленных на опоре (БД Моссвет)', 'Муниципальный округ (БД Моссвет)', 'Административный округ (БД Моссвет)', 'Улица (БД Моссвет)', 'Ориентир (БД Моссвет)']
 # ============== SET LOGGER ===============
 
- 
-logging.config.fileConfig('setup/logging.conf')
-logger = logging.getLogger("mainApp")
 
-logger.info("Program started")
+line_format = "[%(asctime)s] %(levelname)s [%(funcName)s: %(lineno)d] %(message)s"
 
-'''
-line_format = "[%(asctime)s] [%(name)s] %(levelname)s: %(message)s"
 logging.basicConfig(filename=file_log,
 						format=line_format,
 						level=logging.INFO)
-'''
+
 # ============== MAIN ===============
 
 def main():
-	logger.info("Main started!")
+	logging.info('Module is started!')
 
-	tmp_name = '/home/yda/Documents/check_fill_2_platform/tst_add_1_full_double_03.xlsx'
-	logger.info(r_w_xlsx.read_xlsx(tmp_name))
-	r_w_xlsx.ppprint()
+	tmp_name = path_file + 'tst_f_source.xlsx'
+	tmp_df = read_xlsx(tmp_name)
 
-	logger.info("Main Done!")
+	tmp_df = columns_add(tmp_df, cols_add)
+	tmp_df = columns_order(tmp_df, cols_order)
+	tmp_df = columns_rename(tmp_df, cols_rename)
 
+	write_xlsx(tmp_df, path_file + 'tst_f_4_fill.xlsx')
+
+	logging.info(f"Logging shutdown\n\n")
 	logging.shutdown()
 	return 0
-
-	'''
-	logging.info(f'\nMAIN was start is successful')
-		
-	'''
-	#logging.info(xlsx.read_xlsx(tmp_name))
 
 
 if __name__ == '__main__':

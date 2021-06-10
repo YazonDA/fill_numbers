@@ -1,5 +1,6 @@
 import pandas as pd
 import logging
+import string
 	
 
 class xlsx():
@@ -7,7 +8,6 @@ class xlsx():
 
 def read_xlsx(filename):
 	# special for XLSX
-	#logging.info('into READ_XLSX')
 	array = []
 	try:
 		array = pd.read_excel(filename)
@@ -41,6 +41,55 @@ def columns_rename(in_df, name_list):
 
 def columns_list(in_df):
 	return list(in_df.columns.values)
+
+def check_rus(deveui, const_en='AABBCCEE', const_ru='аАвВсСеЕ'):
+	try:
+		for tmp_rus in const_ru:
+			if tmp_rus in deveui:
+				return ''.join(const_en[const_ru.index(chr)] if (chr in const_ru) else chr for chr in deveui)
+		return deveui
+	except (TypeError):
+		logging.error(f'TypeError: argument of type "float" is not iterable')
+		return 'ffffffff'
+
+def check_seq(deveui, const_seq=['x005f', 'x000D']):
+	try:
+		for seq in const_seq:
+			while seq in deveui:
+				deveui = deveui[:deveui.index(seq)] + deveui[deveui.index(seq) + len(seq):]
+		return deveui
+	except (TypeError):
+		logging.error(f'TypeError: argument of type "float" is not iterable')
+		return 'ffffffff'
+
+def check_hex(deveui, const_hex=string.hexdigits):
+	try:
+		return ''.join(i for i in deveui if i in const_hex)
+	except (TypeError):
+		logging.error(f'TypeError: argument of type "float" is not iterable')
+		return 'ffffffff'
+
+def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey']):
+	try:
+		if anch[0] in deveui and anch[1] in deveui:
+			return deveui[8:25]
+		return deveui 
+	except (TypeError):
+		logging.error(f'TypeError: argument of type "float" is not iterable')
+		return 'ffffffff'
+
+def repair_cells(deveui_list):
+	answer = []
+	for deveui in deveui_list:
+		zzz = check_bigQR(deveui)
+		zzz = check_seq(zzz)
+		zzz = check_rus(zzz)
+		zzz = check_hex(zzz)
+		logging.info(f'{deveui} ==> {zzz}')
+		answer.append(zzz)
+	return answer
+
+
 
 if __name__ == '__main__':
 	print(f'You are make attempt to run this module.\n\

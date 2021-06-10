@@ -1,7 +1,7 @@
 import pandas as pd
 import logging
 import string
-	
+import re
 
 class xlsx():
 	pass
@@ -28,7 +28,7 @@ def columns_add(in_df, add_list):
 	logging.info('Module is completed!')
 	return in_df
 
-def columns_order(in_df, order_list, len=15):
+def columns_order(in_df, order_list):
 	in_df = in_df.reindex(columns=order_list)
 	logging.info('Module is completed!')
 	return in_df
@@ -49,7 +49,7 @@ def check_rus(deveui, const_en='AABBCCEE', const_ru='аАвВсСеЕ'):
 				return ''.join(const_en[const_ru.index(chr)] if (chr in const_ru) else chr for chr in deveui)
 		return deveui
 	except (TypeError):
-		logging.error(f'TypeError: argument of type "float" is not iterable')
+		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return 'ffffffff'
 
 def check_seq(deveui, const_seq=['x005f', 'x000D']):
@@ -59,14 +59,27 @@ def check_seq(deveui, const_seq=['x005f', 'x000D']):
 				deveui = deveui[:deveui.index(seq)] + deveui[deveui.index(seq) + len(seq):]
 		return deveui
 	except (TypeError):
-		logging.error(f'TypeError: argument of type "float" is not iterable')
+		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return 'ffffffff'
 
-def check_hex(deveui, const_hex=string.hexdigits):
+def check_hex(deveui, const_deveui=string.hexdigits):
 	try:
-		return ''.join(i for i in deveui if i in const_hex)
+		zzz = ''.join(i for i in deveui if i in const_deveui)
+		if len(zzz) == 0:
+			return 'ffffffff'
+		return zzz
 	except (TypeError):
-		logging.error(f'TypeError: argument of type "float" is not iterable')
+		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		return 'ffffffff'
+
+def check_dec(rfid, const_rfid=string.ascii_letters+string.digits):
+	try:
+		zzz = ''.join(i for i in rfid if i in const_rfid)
+		if len(zzz) == 0:
+			return 'ffffffff'
+		return zzz
+	except (TypeError):
+		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return 'ffffffff'
 
 def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey']):
@@ -75,17 +88,31 @@ def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey']):
 			return deveui[8:25]
 		return deveui 
 	except (TypeError):
-		logging.error(f'TypeError: argument of type "float" is not iterable')
+		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return 'ffffffff'
 
-def repair_cells(deveui_list):
+def repair_dev(deveui_list):
 	answer = []
 	for deveui in deveui_list:
-		zzz = check_bigQR(deveui)
-		zzz = check_seq(zzz)
-		zzz = check_rus(zzz)
-		zzz = check_hex(zzz)
-		logging.info(f'{deveui} ==> {zzz}')
+		deveui = check_bigQR(deveui)
+		deveui = check_seq(deveui)
+		deveui = check_rus(deveui)
+		deveui = check_hex(deveui)
+		answer.append(deveui)
+	return answer
+
+def mask_deveui(deveui_list, pattern_deveui=r'0016[cC]00000[0-9a-fA-F]{6}'):
+	mask = []
+	for deveui in deveui_list:
+		mask.append(bool(re.fullmatch(pattern_deveui, deveui)))
+	return mask
+
+def repair_rfid(rfid_list):
+	answer = []
+	for rfid in rfid_list:
+		zzz = check_seq(rfid)
+		zzz = check_dec(zzz)
+		logging.info(f'{rfid} ==> {zzz}')
 		answer.append(zzz)
 	return answer
 

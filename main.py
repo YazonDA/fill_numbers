@@ -6,6 +6,7 @@ import logging.config
 import configparser
 import os
 import string
+import re
 
 from modules import *
 
@@ -44,7 +45,9 @@ cols_rename = ['DevEUI', 'Координата Y WGS84, широта', 'Коор
 const_ru = 'аАвВсСеЕ'
 const_en = 'AABBCCEE'
 const_seq = ['x005f', 'x000D']
-const_hex = string.hexdigits
+const_deveui = string.hexdigits
+const_rfid = string.ascii_letters + string.digits
+format_deveui = r'0016[cC]00000[0-9a-fA-F]{6}'
 
 # ============== SET LOGGER ===============
 
@@ -72,11 +75,22 @@ def main():
 	df_4_fill = columns_rename(df_4_fill, cols_rename)
 
 	list_deveui = df_4_fill['DevEUI'].tolist()
+	list_repaired_deveui = repair_dev(list_deveui)
+	
+	mask_dev = x = pd.Series(mask_deveui(list_repaired_deveui))
+	df_err_dev = df_4_fill[~mask_dev]
+	df_4_fill['DevEUI'] = list_repaired_deveui
+	df_4_fill = df_4_fill[mask_dev]
 
-	list_deveui_1 = repair_cells(list_deveui)
 
+	'''_
+				list_rfid = df_4_fill['RFID значение метки на опоре'].tolist()
+				list_repaired_rfid = repair_rfid(list_rfid)
+				#df_4_fill['RFID значение метки на опоре'] = list_repaired_rfid
+				_'''
 
 	write_xlsx(df_4_fill, file_4_fill)
+	write_xlsx(df_err_dev, file_err_dev)
 
 	logging.info(f"Logging shutdown\n\n")
 	logging.shutdown()

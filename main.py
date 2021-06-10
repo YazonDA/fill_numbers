@@ -26,9 +26,9 @@ path_file = path_main + parser["PATH"]["files"]
 # Names of some Files
 file_log = path_log + 'tmp_log'
 file_source = path_file + parser['FILES']['f_source']
-file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
+#file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
 file_4_fill = path_file + parser['FILES']['f_4_fill']
-file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
+#file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
 file_4_pass = path_file + parser['FILES']['f_4_pass']
 file_err_dev = path_file + parser['FILES']['f_err_dev']
 file_err_rfid = path_file + parser['FILES']['f_err_rfid']
@@ -92,14 +92,23 @@ def main():
 	df_doubles = df_4_fill[~mask_doub]
 	df_4_fill = df_4_fill[mask_doub]
 
-	'''
-	list_rfid = df_4_fill['RFID значение метки на опоре'].tolist()
-	list_repaired_rfid = repair_rfid(list_rfid)
-	#df_4_fill['RFID значение метки на опоре'] = list_repaired_rfid
-	'''
-	write_xlsx(df_4_fill, file_4_fill)
 	write_xlsx(df_err_dev, file_err_dev)
 	write_xlsx(df_doubles, file_doubles)
+
+	list_rfid = df_4_fill['RFID значение метки на опоре'].tolist()
+	list_repaired_rfid = repair_rfid(list_rfid)
+
+	# w/o this two string of code -- Error ... and I don`t know why :(
+	write_xlsx(df_4_fill, file_4_fill)
+	df_4_fill = read_xlsx(file_4_fill)
+	
+	mask_rf = pd.Series(mask_rfid(list_repaired_rfid))
+	df_err_rfid = df_4_fill[~mask_rf]
+	df_4_fill['RFID значение метки на опоре'] = list_repaired_rfid
+	df_4_fill = df_4_fill[mask_rf]
+	
+	write_xlsx(df_4_fill, file_4_fill)
+	write_xlsx(df_err_rfid, file_err_rfid)
 
 	logging.info(f"Logging shutdown\n\n")
 	logging.shutdown()

@@ -134,6 +134,12 @@ def repair_rfid(rfid_list):
 		answer.append(zzz)
 	return answer
 
+def mask_rfid(rfid_list):
+	mask = []
+	for rfid in rfid_list:
+		mask.append(bool(len(rfid) >= 6))
+	return mask
+
 
 
 if __name__ == '__main__':

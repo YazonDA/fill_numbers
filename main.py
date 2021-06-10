@@ -33,6 +33,7 @@ file_4_pass = path_file + parser['FILES']['f_4_pass']
 file_err_dev = path_file + parser['FILES']['f_err_dev']
 file_err_rfid = path_file + parser['FILES']['f_err_rfid']
 file_err_coord = path_file + parser['FILES']['f_err_coord']
+file_doubles = path_file + parser['FILES']['f_doubles']
 
 # List of some  Column`s Names
 cols_order = ['QR код контроллера', 'Координата Х WGS84', 'Координата Y WGS84', 'ID опоры', 'RFID значение метки на опоре', 'Организация', 'N сектора', '№ ШУНО', 'Положение светильника относительно дороги', 'Положение светильника на опоре', 'Марки светильников, установленных на опоре (БД Моссвет)', 'Муниципальный округ (БД Моссвет)', 'Административный округ (БД Моссвет)', 'Улица (БД Моссвет)', 'Ориентир (БД Моссвет)']
@@ -77,20 +78,28 @@ def main():
 	list_deveui = df_4_fill['DevEUI'].tolist()
 	list_repaired_deveui = repair_dev(list_deveui)
 	
-	mask_dev = x = pd.Series(mask_deveui(list_repaired_deveui))
+	mask_dev = pd.Series(mask_deveui(list_repaired_deveui))
 	df_err_dev = df_4_fill[~mask_dev]
 	df_4_fill['DevEUI'] = list_repaired_deveui
 	df_4_fill = df_4_fill[mask_dev]
 
+	# w/o this two string of code -- Error ... and I don`t know why :(
+	write_xlsx(df_4_fill, file_4_fill)
+	df_4_fill = read_xlsx(file_4_fill)
 
-	'''_
-				list_rfid = df_4_fill['RFID значение метки на опоре'].tolist()
-				list_repaired_rfid = repair_rfid(list_rfid)
-				#df_4_fill['RFID значение метки на опоре'] = list_repaired_rfid
-				_'''
+	list_deveui = df_4_fill['DevEUI'].tolist()
+	mask_doub = pd.Series(mask_double(list_deveui))
+	df_doubles = df_4_fill[~mask_doub]
+	df_4_fill = df_4_fill[mask_doub]
 
+	'''
+	list_rfid = df_4_fill['RFID значение метки на опоре'].tolist()
+	list_repaired_rfid = repair_rfid(list_rfid)
+	#df_4_fill['RFID значение метки на опоре'] = list_repaired_rfid
+	'''
 	write_xlsx(df_4_fill, file_4_fill)
 	write_xlsx(df_err_dev, file_err_dev)
+	write_xlsx(df_doubles, file_doubles)
 
 	logging.info(f"Logging shutdown\n\n")
 	logging.shutdown()

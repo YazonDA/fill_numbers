@@ -2,6 +2,7 @@ import pandas as pd
 import logging
 import string
 import re
+import csv
 
 class xlsx():
 	pass
@@ -21,6 +22,13 @@ def write_xlsx(in_df, filename):
 	# special for XLSX
 	in_df.to_excel(filename, index=False)
 	logging.info(f'Length == {len(in_df)}\nModule is completed!')
+
+def write_csv(arr, filename):
+	with open(filename, 'w') as csv_file:
+		writer = csv.writer(csv_file, dialect = 'excel')
+		for i in arr:
+			writer.writerow([i])
+	return True
 
 def columns_add(in_df, add_list):
 	for col_name in add_list:
@@ -49,7 +57,7 @@ def check_rus(deveui, const_en='AABBCCEE', const_ru='аАвВсСеЕ'):
 				return ''.join(const_en[const_ru.index(chr)] if (chr in const_ru) else chr for chr in deveui)
 		return deveui
 	except (TypeError):
-		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return 'ffffffff'
 
 def check_seq(deveui, const_seq=['x005f', 'x000D']):
@@ -59,7 +67,7 @@ def check_seq(deveui, const_seq=['x005f', 'x000D']):
 				deveui = deveui[:deveui.index(seq)] + deveui[deveui.index(seq) + len(seq):]
 		return deveui
 	except (TypeError):
-		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return 'ffffffff'
 
 def check_hex(deveui, const_deveui=string.hexdigits):
@@ -69,7 +77,7 @@ def check_hex(deveui, const_deveui=string.hexdigits):
 			return 'ffffffff'
 		return zzz
 	except (TypeError):
-		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return 'ffffffff'
 
 def check_dec(rfid, const_rfid=string.ascii_letters+string.digits):
@@ -79,7 +87,7 @@ def check_dec(rfid, const_rfid=string.ascii_letters+string.digits):
 			return 'ffffffff'
 		return zzz
 	except (TypeError):
-		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return 'ffffffff'
 
 def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey']):
@@ -88,7 +96,7 @@ def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey']):
 			return deveui[8:25]
 		return deveui 
 	except (TypeError):
-		logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return 'ffffffff'
 
 def repair_dev(deveui_list):
@@ -107,12 +115,22 @@ def mask_deveui(deveui_list, pattern_deveui=r'0016[cC]00000[0-9a-fA-F]{6}'):
 		mask.append(bool(re.fullmatch(pattern_deveui, deveui)))
 	return mask
 
+def mask_double(deveui_list):
+	mask = []
+	#um = 1
+	for deveui in deveui_list:
+		mask.append(bool(deveui_list.count(deveui) == 1))
+		#if not bool(deveui_list.count(deveui) == 1):
+		#	logging.info(f'doubles is finded in string #{num}-- {deveui}')
+		#num += 1
+	return mask
+
 def repair_rfid(rfid_list):
 	answer = []
 	for rfid in rfid_list:
 		zzz = check_seq(rfid)
 		zzz = check_dec(zzz)
-		logging.info(f'{rfid} ==> {zzz}')
+		#logging.info(f'{rfid} ==> {zzz}')
 		answer.append(zzz)
 	return answer
 

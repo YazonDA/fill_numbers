@@ -156,7 +156,16 @@ def check_coord(coord_list, minmax):
 	logging.info('it`s completed!')
 	return coord_list, mask
 
-
+def repair_org(org_list, dict_org_sect):
+	n_sect_list = []
+	for ind in range(len(org_list)):
+		if org_list[ind] not in dict_org_sect:
+			org_list[ind] = 'Неопределен.'
+		n_sect_list.append(dict_org_sect[org_list[ind]])
+		if not bool(ind%5000):
+			logging.info(f'{ind} lines processed.')
+	logging.info('it`s completed!')
+	return (org_list, n_sect_list)
 
 
 if __name__ == '__main__':

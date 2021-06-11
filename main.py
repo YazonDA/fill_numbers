@@ -26,9 +26,9 @@ path_file = path_main + parser["PATH"]["files"]
 # Names of some Files
 file_log = path_log + 'tmp_log'
 file_source = path_file + parser['FILES']['f_source']
-file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
+#file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
 file_4_fill = path_file + parser['FILES']['f_4_fill']
-file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
+#file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
 file_4_pass = path_file + parser['FILES']['f_4_pass']
 file_err_dev = path_file + parser['FILES']['f_err_dev']
 file_err_rfid = path_file + parser['FILES']['f_err_rfid']

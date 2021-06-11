@@ -106,7 +106,7 @@ def repair_dev(deveui_list):
 		deveui = check_seq(deveui)
 		deveui = check_rus(deveui)
 		deveui = check_hex(deveui)
-		answer.append(deveui)
+		answer.append(deveui.lower())
 	logging.info('it`s completed!')
 	return answer
 

@@ -26,9 +26,9 @@ path_file = path_main + parser["PATH"]["files"]
 # Names of some Files
 file_log = path_log + 'tmp_log'
 file_source = path_file + parser['FILES']['f_source']
-#file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
+file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
 file_4_fill = path_file + parser['FILES']['f_4_fill']
-#file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
+file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
 file_4_pass = path_file + parser['FILES']['f_4_pass']
 file_err_dev = path_file + parser['FILES']['f_err_dev']
 file_err_rfid = path_file + parser['FILES']['f_err_rfid']
@@ -36,9 +36,9 @@ file_err_coord = path_file + parser['FILES']['f_err_coord']
 file_doubles = path_file + parser['FILES']['f_doubles']
 
 # List of some  Column`s Names
-cols_order = ['QR код контроллера', 'Координата Х WGS84', 'Координата Y WGS84', 'ID опоры', 'RFID значение метки на опоре', 'Организация', 'N сектора', '№ ШУНО', 'Положение светильника относительно дороги', 'Положение светильника на опоре', 'Марки светильников, установленных на опоре (БД Моссвет)', 'Муниципальный округ (БД Моссвет)', 'Административный округ (БД Моссвет)', 'Улица (БД Моссвет)', 'Ориентир (БД Моссвет)']
-cols_add = ['N сектора', '№ ШУНО']
-cols_rename = ['DevEUI', 'Координата Y WGS84, широта', 'Координата Х WGS84, долгота', 'ID опоры', 'RFID значение метки на опоре', 'Сектор / Организация', 'N сектора', '№ ШУНО', 'Положение светильника относительно дороги', 'Положение светильника на опоре', 'Марки светильников, установленных на опоре (БД Моссвет)', 'Муниципальный округ (БД Моссвет)', 'Административный округ (БД Моссвет)', 'Улица (БД Моссвет)', 'Ориентир (БД Моссвет)']
+cols_order = parser['LISTS']['cols_order'].split('|')
+cols_add = parser['LISTS']['cols_add'].split('|')
+cols_rename = parser['LISTS']['cols_rename'].split('|')
 
 
 # sample for some compare
@@ -63,8 +63,9 @@ logging.basicConfig(filename=file_log,
 
 def main():
 	'''
-	print(check_bigQR('DevEUI  0016c00000114fbc; AppEUI 00-06-00-01-00-00-00-07; AppKey  ; DevAddr  00-11-4f-bc; AppSKey 45:13:65:86:72:5a:a1:0c:bc:09:ac:f7:01:21:4b:4e; NwkSEncKey 8c:4c:c2:31:3c:57:27:14:23:53:51:44:40:66:8a:02; FNwkSIntKey  f5:66:62:38:8a:01:f5:8f:a7:a2:3a:26:08:f1:c7:65; SNwkSIntKey '))
-
+	print(cols_order, '\n', type(cols_order))
+	for i in cols_order:
+		print(i)
 	return 0
 	#'''
 	logging.info('Module is started!')

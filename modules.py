@@ -12,7 +12,7 @@ def read_xlsx(filename):
 	array = []
 	try:
 		array = pd.read_excel(filename)
-		logging.info(f'Length == {len(array)}\nModule is completed!')
+		logging.info(f'Length({filename.split("/")[-1]}) == {len(array)}; Module is completed!')
 		return array
 	except (FileNotFoundError, IsADirectoryError):
 		logging.error(f'FileNotFoundError, IsADirectoryError')
@@ -21,7 +21,7 @@ def read_xlsx(filename):
 def write_xlsx(in_df, filename):
 	# special for XLSX
 	in_df.to_excel(filename, index=False)
-	logging.info(f'Length == {len(in_df)}\nModule is completed!')
+	logging.info(f'Length({filename.split("/")[-1]}) == {len(in_df)}; Module is completed!')
 
 def write_csv(arr, filename):
 	with open(filename, 'w') as csv_file:

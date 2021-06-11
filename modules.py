@@ -4,15 +4,14 @@ import string
 import re
 import csv
 
-class xlsx():
-	pass
+
 
 def read_xlsx(filename):
 	# special for XLSX
 	array = []
 	try:
 		array = pd.read_excel(filename)
-		logging.info(f'Length({filename.split("/")[-1]}) == {len(array)}; Module is completed!')
+		logging.info(f'{filename.split("/")[-1]} == {len(array)} lines; it`s completed!')
 		return array
 	except (FileNotFoundError, IsADirectoryError):
 		logging.error(f'FileNotFoundError, IsADirectoryError')
@@ -21,35 +20,36 @@ def read_xlsx(filename):
 def write_xlsx(in_df, filename):
 	# special for XLSX
 	in_df.to_excel(filename, index=False)
-	logging.info(f'Length({filename.split("/")[-1]}) == {len(in_df)}; Module is completed!')
+	logging.info(f'{filename.split("/")[-1]} == {len(in_df)} lines; it`s completed!')
 
 def write_csv(arr, filename):
 	with open(filename, 'w') as csv_file:
 		writer = csv.writer(csv_file, dialect = 'excel')
 		for i in arr:
 			writer.writerow([i])
+	logging.info(f'{filename.split("/")[-1]} == {len(arr)} lines; it`s completed!')
 	return True
 
 def columns_add(in_df, add_list):
 	for col_name in add_list:
 		in_df[col_name] = 0
-	logging.info('Module is completed!')
+	logging.info('it`s completed!')
 	return in_df
 
 def columns_order(in_df, order_list):
 	in_df = in_df.reindex(columns=order_list)
-	logging.info('Module is completed!')
+	logging.info('it`s completed!')
 	return in_df
 
 def columns_rename(in_df, name_list):
 	in_df.columns = name_list
 	#cols = list(tmp_df.columns.values)
-	logging.info('Module is completed!')
+	logging.info('it`s completed!')
 	return in_df
-
+'''
 def columns_list(in_df):
 	return list(in_df.columns.values)
-
+'''
 def check_rus(deveui, const_en='AABBCCEE', const_ru='аАвВсСеЕ'):
 	try:
 		for tmp_rus in const_ru:
@@ -107,22 +107,23 @@ def repair_dev(deveui_list):
 		deveui = check_rus(deveui)
 		deveui = check_hex(deveui)
 		answer.append(deveui)
+	logging.info('it`s completed!')
 	return answer
 
 def mask_deveui(deveui_list, pattern_deveui=r'0016[cC]00000[0-9a-fA-F]{6}'):
 	mask = []
 	for deveui in deveui_list:
 		mask.append(bool(re.fullmatch(pattern_deveui, deveui)))
+	logging.info('it`s completed!')
 	return mask
 
 def mask_double(deveui_list):
 	mask = []
-	#um = 1
-	for deveui in deveui_list:
+	for ind, deveui in enumerate(deveui_list):
 		mask.append(bool(deveui_list.count(deveui) == 1))
-		#if not bool(deveui_list.count(deveui) == 1):
-		#	logging.info(f'doubles is finded in string #{num}-- {deveui}')
-		#num += 1
+		if not bool(ind%5000):
+			logging.info(f'{ind} lines processed.')
+	logging.info('it`s completed!')
 	return mask
 
 def repair_rfid(rfid_list):
@@ -130,15 +131,31 @@ def repair_rfid(rfid_list):
 	for rfid in rfid_list:
 		zzz = check_seq(rfid)
 		zzz = check_dec(zzz)
-		#logging.info(f'{rfid} ==> {zzz}')
 		answer.append(zzz)
+	logging.info('it`s completed!')
 	return answer
 
 def mask_rfid(rfid_list):
 	mask = []
 	for rfid in rfid_list:
 		mask.append(bool(len(rfid) >= 6))
+	logging.info('it`s completed!')
 	return mask
+
+def check_coord(coord_list, minmax):
+	mask = []
+	for ind, coord in enumerate(coord_list):
+		if isinstance(coord, str):
+			if re.match(r'^\d{2},\d{4,}$', coord):
+				coord_list[ind] = float(coord.replace(',', '.'))
+				coord = coord_list[ind]
+		if isinstance(coord, float):
+			mask.append(bool(minmax[0] <= coord <= minmax[1]))
+			continue
+		mask.append(False)
+	logging.info('it`s completed!')
+	return coord_list, mask
+
 
 
 

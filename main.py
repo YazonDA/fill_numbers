@@ -2,7 +2,7 @@
 
 import sys
 import logging
-import logging.config
+#import logging.config
 import configparser
 import os
 import string
@@ -26,9 +26,9 @@ path_file = path_main + parser["PATH"]["files"]
 # Names of some Files
 file_log = path_log + 'tmp_log'
 file_source = path_file + parser['FILES']['f_source']
-file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
+#file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
 file_4_fill = path_file + parser['FILES']['f_4_fill']
-file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
+#file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
 file_4_pass = path_file + parser['FILES']['f_4_pass']
 file_err_dev = path_file + parser['FILES']['f_err_dev']
 file_err_rfid = path_file + parser['FILES']['f_err_rfid']
@@ -49,6 +49,8 @@ const_seq = ['x005f', 'x000D']
 const_deveui = string.hexdigits
 const_rfid = string.ascii_letters + string.digits
 format_deveui = r'0016[cC]00000[0-9a-fA-F]{6}'
+minmax_Y = list(map(float, parser['COORD']['minmax_Y'].split('|')))
+minmax_X = list(map(float, parser['COORD']['minmax_X'].split('|')))
 
 # ============== SET LOGGER ===============
 
@@ -70,38 +72,44 @@ def main():
 	#'''
 	logging.info('Module is started!')
 
+	# 1--
+	# Сохранить Файл-источник, как Файл-добавлений.
+	# Поменять местами, удалить не нужные и переименовать столбцы
 	df_4_fill = read_xlsx(file_source)
-
 	df_4_fill = columns_add(df_4_fill, cols_add)
 	df_4_fill = columns_order(df_4_fill, cols_order)
 	df_4_fill = columns_rename(df_4_fill, cols_rename)
+	#-1---------------------------------------------------------------
 
+	# 2--
+	# Обработать колонку DevEUI
 	list_deveui = df_4_fill['DevEUI'].tolist()
 	list_repaired_deveui = repair_dev(list_deveui)
-	
 	mask_dev = pd.Series(mask_deveui(list_repaired_deveui))
 	df_err_dev = df_4_fill[~mask_dev]
 	df_4_fill['DevEUI'] = list_repaired_deveui
 	df_4_fill = df_4_fill[mask_dev]
-
-	# w/o this two string of code -- Error ... and I don`t know why :(
+	
 	write_xlsx(df_4_fill, file_4_fill)
+	write_xlsx(df_err_dev, file_err_dev)
+	# w/o this string -- Error ... and I don`t know why :(
 	df_4_fill = read_xlsx(file_4_fill)
+	#-----------------------------------------------------------------
 
 	list_deveui = df_4_fill['DevEUI'].tolist()
 	mask_doub = pd.Series(mask_double(list_deveui))
 	df_doubles = df_4_fill[~mask_doub]
 	df_4_fill = df_4_fill[mask_doub]
 
-	write_xlsx(df_err_dev, file_err_dev)
 	write_xlsx(df_doubles, file_doubles)
+	write_xlsx(df_4_fill, file_4_fill)
+	#-2---------------------------------------------------------------
 
+	# 3--
+	# Обработать колонку RFID
+	df_4_fill = read_xlsx(file_4_fill)
 	list_rfid = df_4_fill['RFID значение метки на опоре'].tolist()
 	list_repaired_rfid = repair_rfid(list_rfid)
-
-	# w/o this two string of code -- Error ... and I don`t know why :(
-	write_xlsx(df_4_fill, file_4_fill)
-	df_4_fill = read_xlsx(file_4_fill)
 	
 	mask_rf = pd.Series(mask_rfid(list_repaired_rfid))
 	df_err_rfid = df_4_fill[~mask_rf]
@@ -110,6 +118,50 @@ def main():
 	
 	write_xlsx(df_4_fill, file_4_fill)
 	write_xlsx(df_err_rfid, file_err_rfid)
+	#-3---------------------------------------------------------------
+
+	# 4--
+	# Обработать колонки Координата
+	df_4_fill = read_xlsx(file_4_fill)
+	list_coord_Y = df_4_fill['Координата Y WGS84, широта'].tolist()
+	list_coord_X = df_4_fill['Координата Х WGS84, долгота'].tolist()
+	
+	list_coord_Y_rep, mask_coord_Y = check_coord(list_coord_Y, minmax_Y)
+	list_coord_X_rep, mask_coord_X = check_coord(list_coord_X, minmax_X)
+	
+	if False in mask_coord_X or False in mask_coord_Y:
+		mask_coord = pd.Series(list(map(lambda x, y: x and y, mask_coord_X, mask_coord_Y)))
+		logging.info('split by coord_err')
+		df_err_coord = df_4_fill[~mask_coord]
+		df_4_fill['Координата Y WGS84, широта'] = list_coord_Y_rep
+		df_4_fill['Координата Х WGS84, долгота'] = list_coord_X_rep
+		df_4_fill = df_4_fill[mask_coord]
+		write_xlsx(df_err_coord, file_err_coord)
+
+	write_xlsx(df_4_fill, file_4_fill)
+	#-4---------------------------------------------------------------
+
+	# 5--
+	# Обработать колонки Сектор / Организация & N сектора
+	df_4_fill = read_xlsx(file_4_fill)
+	list_coord_Y = df_4_fill['Координата Y WGS84, широта'].tolist()
+	list_coord_X = df_4_fill['Координата Х WGS84, долгота'].tolist()
+	
+	list_coord_Y_rep, mask_coord_Y = check_coord(list_coord_Y, minmax_Y)
+	list_coord_X_rep, mask_coord_X = check_coord(list_coord_X, minmax_X)
+	
+	if False in mask_coord_X or False in mask_coord_Y:
+		mask_coord = pd.Series(list(map(lambda x, y: x and y, mask_coord_X, mask_coord_Y)))
+		logging.info('split by coord_err')
+		df_err_coord = df_4_fill[~mask_coord]
+		df_4_fill['Координата Y WGS84, широта'] = list_coord_Y_rep
+		df_4_fill['Координата Х WGS84, долгота'] = list_coord_X_rep
+		df_4_fill = df_4_fill[mask_coord]
+
+	write_xlsx(df_4_fill, file_4_fill)
+	write_xlsx(df__err_coord, file_err_coord)
+	#-5---------------------------------------------------------------
+
 
 	logging.info(f"Logging shutdown\n\n")
 	logging.shutdown()

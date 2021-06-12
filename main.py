@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
-import sys
-import logging
-#import logging.config
+#import sys
+#import logging
 import configparser
 import os
-import string
-import re
+#import string
+#import re
 
 from modules import *
 
@@ -54,17 +53,17 @@ minmax_X = list(map(float, parser['COORD']['minmax_X'].split('|')))
 
 # ============== SET LOGGER ===============
 
-
+'''
 line_format = "[%(asctime)s] %(levelname)s [%(funcName)s: %(lineno)d] %(message)s"
 
 logging.basicConfig(filename=file_log,
 						format=line_format,
 						level=logging.INFO)
-
+'''
 # ============== MAIN ===============
 
 def main():
-	logging.info('Main-Module is started!')
+	#logging.info('Main-Module is started!')
 
 	# 1--
 	# Сохранить Файл-источник, как Файл-добавлений.
@@ -89,8 +88,9 @@ def main():
 
 	write_xlsx(df_err_dev, file_err_dev)
 	
-	df_doubles = df_4_fill[df_4_fill.duplicated(subset='DevEUI', keep=False)]
-	df_4_fill = df_4_fill.drop_duplicates(subset='DevEUI', keep=False)
+	#df_doubles = df_4_fill[df_4_fill.duplicated(subset='DevEUI', keep=False)]
+	#df_4_fill = df_4_fill.drop_duplicates(subset='DevEUI', keep=False)
+	df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
 	df_4_fill = re_index(df_4_fill)
 
 	write_xlsx(df_doubles, file_doubles)
@@ -120,7 +120,7 @@ def main():
 	
 	if False in mask_coord_X or False in mask_coord_Y:
 		mask_coord = pd.Series(list(map(lambda x, y: x and y, mask_coord_X, mask_coord_Y)))
-		logging.info('split by coord_err')
+		#logging.info('split by coord_err')
 		df_err_coord = df_4_fill[~mask_coord]
 		df_4_fill['Координата Y WGS84, широта'] = list_coord_Y_rep
 		df_4_fill['Координата Х WGS84, долгота'] = list_coord_X_rep
@@ -140,8 +140,8 @@ def main():
 	#-5---------------------------------------------------------------
 
 
-	logging.info(f"Logging shutdown\n\n")
-	logging.shutdown()
+	#logging.info(f"Logging shutdown\n\n")
+	#logging.shutdown()
 	return 0
 
 

@@ -98,9 +98,13 @@ def main():
 	#-----------------------------------------------------------------
 
 	list_deveui = df_4_fill['DevEUI'].tolist()
-	mask_doub = pd.Series(mask_double(list_deveui))
-	df_doubles = df_4_fill[~mask_doub]
-	df_4_fill = df_4_fill[mask_doub]
+	
+	df_doubles = df_4_fill[df_4_fill.duplicated(subset='DevEUI', keep=False)]
+	df_4_fill = df_4_fill.drop_duplicates(subset='DevEUI', keep=False)
+
+	#mask_doub = pd.Series(mask_double(list_deveui))
+	#df_doubles = df_4_fill[~mask_doub]
+	#df_4_fill = df_4_fill[mask_doub]
 
 	write_xlsx(df_doubles, file_doubles)
 	write_xlsx(df_4_fill, file_4_fill)

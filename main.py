@@ -43,7 +43,6 @@ cols_rename = parser['LISTS']['cols_rename'].split('|')
 dict_org_sect = dict(zip(parser['LISTS']['org_list'].split('|'), parser['LISTS']['sect_list'].split('|')))
 
 # sample for some compare
-#const_dev = string.hexdigits
 const_ru = 'аАвВсСеЕ'
 const_en = 'AABBCCEE'
 const_seq = ['x005f', 'x000D']
@@ -65,13 +64,7 @@ logging.basicConfig(filename=file_log,
 # ============== MAIN ===============
 
 def main():
-	'''
-	print(cols_order, '\n', type(cols_order))
-	for i in cols_order:
-		print(i)
-	return 0
-	#'''
-	logging.info('Module is started!')
+	logging.info('Main-Module is started!')
 
 	# 1--
 	# Сохранить Файл-источник, как Файл-добавлений.
@@ -81,6 +74,7 @@ def main():
 	df_4_fill = columns_order(df_4_fill, cols_order)
 	df_4_fill = columns_rename(df_4_fill, cols_rename)
 	#-1---------------------------------------------------------------
+
 	
 	# 2--
 	# Обработать колонку DevEUI
@@ -88,31 +82,22 @@ def main():
 	list_repaired_deveui = repair_dev(list_deveui)
 	mask_dev = pd.Series(mask_deveui(list_repaired_deveui))
 	df_err_dev = df_4_fill[~mask_dev]
+
 	df_4_fill['DevEUI'] = list_repaired_deveui
 	df_4_fill = df_4_fill[mask_dev]
-	
-	write_xlsx(df_err_dev, file_err_dev)
-	write_xlsx(df_4_fill, file_4_fill)
-	# w/o this string -- Error ... and I don`t know why :(
-	df_4_fill = read_xlsx(file_4_fill)
-	#-----------------------------------------------------------------
+	df_4_fill = re_index(df_4_fill)
 
-	list_deveui = df_4_fill['DevEUI'].tolist()
+	write_xlsx(df_err_dev, file_err_dev)
 	
 	df_doubles = df_4_fill[df_4_fill.duplicated(subset='DevEUI', keep=False)]
 	df_4_fill = df_4_fill.drop_duplicates(subset='DevEUI', keep=False)
-
-	#mask_doub = pd.Series(mask_double(list_deveui))
-	#df_doubles = df_4_fill[~mask_doub]
-	#df_4_fill = df_4_fill[mask_doub]
+	df_4_fill = re_index(df_4_fill)
 
 	write_xlsx(df_doubles, file_doubles)
-	write_xlsx(df_4_fill, file_4_fill)
 	#-2---------------------------------------------------------------
 
 	# 3--
 	# Обработать колонку RFID
-	df_4_fill = read_xlsx(file_4_fill)
 	list_rfid = df_4_fill['RFID значение метки на опоре'].tolist()
 	list_repaired_rfid = repair_rfid(list_rfid)
 	
@@ -120,14 +105,13 @@ def main():
 	df_err_rfid = df_4_fill[~mask_rf]
 	df_4_fill['RFID значение метки на опоре'] = list_repaired_rfid
 	df_4_fill = df_4_fill[mask_rf]
+	df_4_fill = re_index(df_4_fill)
 	
 	write_xlsx(df_err_rfid, file_err_rfid)
-	write_xlsx(df_4_fill, file_4_fill)
 	#-3---------------------------------------------------------------
 
 	# 4--
 	# Обработать колонки Координата
-	df_4_fill = read_xlsx(file_4_fill)
 	list_coord_Y = df_4_fill['Координата Y WGS84, широта'].tolist()
 	list_coord_X = df_4_fill['Координата Х WGS84, долгота'].tolist()
 	
@@ -141,14 +125,12 @@ def main():
 		df_4_fill['Координата Y WGS84, широта'] = list_coord_Y_rep
 		df_4_fill['Координата Х WGS84, долгота'] = list_coord_X_rep
 		df_4_fill = df_4_fill[mask_coord]
+		df_4_fill = re_index(df_4_fill)
 		write_xlsx(df_err_coord, file_err_coord)
-
-	write_xlsx(df_4_fill, file_4_fill)
 	#-4---------------------------------------------------------------
 	
 	# 5--
 	# Обработать колонки Сектор / Организация & N сектора
-	df_4_fill = read_xlsx(file_4_fill)
 	list_org = df_4_fill['Сектор / Организация'].tolist()
 	list_org_rep, list_n_sect = repair_org(list_org, dict_org_sect)
 	df_4_fill['Сектор / Организация'] = list_org_rep

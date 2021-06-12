@@ -8,7 +8,7 @@ import csv
 
 def read_xlsx(filename):
 	# special for XLSX
-	array = []
+	#array = []
 	try:
 		array = pd.read_excel(filename)
 		logging.info(f'{filename.split("/")[-1]} == {len(array)} lines; it`s completed!')
@@ -46,10 +46,13 @@ def columns_rename(in_df, name_list):
 	#cols = list(tmp_df.columns.values)
 	logging.info('it`s completed!')
 	return in_df
-'''
-def columns_list(in_df):
-	return list(in_df.columns.values)
-'''
+
+def re_index(in_df):
+	tmp_new_ind = list(range(len(in_df)))
+	in_df['tmp_new_ind'] = tmp_new_ind
+	in_df = in_df.set_index('tmp_new_ind')
+	return in_df
+
 def check_rus(deveui, const_en='AABBCCEE', const_ru='аАвВсСеЕ'):
 	try:
 		for tmp_rus in const_ru:
@@ -162,8 +165,6 @@ def repair_org(org_list, dict_org_sect):
 		if org_list[ind] not in dict_org_sect:
 			org_list[ind] = 'Неопределен.'
 		n_sect_list.append(dict_org_sect[org_list[ind]])
-		if not bool(ind%5000):
-			logging.info(f'{ind} lines processed.')
 	logging.info('it`s completed!')
 	return (org_list, n_sect_list)
 

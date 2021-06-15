@@ -146,7 +146,4 @@ def main():
 
 
 if __name__ == '__main__':
-	for i in range(10):
-		main()
-	sys.exit(0)
-
+	sys.exit(main())

@@ -9,7 +9,7 @@ import sys
 def read_xlsx(filename):
 	# special for XLSX
 	try:
-		array = pd.read_excel(filename)
+		array = pd.read_excel(filename, engine='openpyxl')
 		logging.info(f'{filename.split("/")[-1]} == {len(array)} lines; it`s completed!')
 		return array
 	except (FileNotFoundError, IsADirectoryError):

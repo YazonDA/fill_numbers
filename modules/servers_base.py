@@ -3,14 +3,15 @@
 
 import psycopg2
 from psycopg2 import Error
-import modules
 import logging
 import sys
+
+import modules
 
 def print_string(st_01, st_02):
 	print('{}\t{}'.format(st_01, st_02))
 
-def list_in_dbase():
+def lists_in_dbase():
 	try:
 		# connect to DB
 		connection = psycopg2.connect("dbname='customer_01' user='lorawan' host='localhost' password='ves2018'")
@@ -18,14 +19,14 @@ def list_in_dbase():
 		# cursor for doing something
 		cursor = connection.cursor()
 
-		string_1 = 'count'
-		string_2 = 'status'
+		request_motes = f'SELECT to_hex(eui) FROM motes;'
+		request_lights = f'SELECT modem_dev_eui FROM lights;'
 
-		my_query = f'SELECT to_hex(m.eui) FROM motes m LEFT JOIN lights l ON (m.eui = l.modem_dev_eui_dec);'
-		cursor.execute(my_query)
-
-		result = cursor.fetchall()
-		return result
+		cursor.execute(request_motes)
+		_list_motes = cursor.fetchall()
+		cursor.execute(request_lights)
+		_list_lights = cursor.fetchall()
+		return (_list_lights, _list_motes)
 
 	except (Exception, Error) as error:
 		print("Some error by work with PostgreSQL", error)
@@ -33,21 +34,24 @@ def list_in_dbase():
 		if connection:
 			cursor.close()
 			connection.close()
-			print("\nConnection to PostgreSQL is closed\n")
+			logging.info(f"\nConnection to PostgreSQL is closed\n")
 
-def list_in_dbase_from_file(filename):
-	result = modules.read_csv(filename, True)
-	return result
-
-def motes_no_lights(_df_4_fill, _file_db_lights, _file_db_motes):
+def lists_in_dbase_from_file(_file_db_lights, _file_db_motes):
 	_list_lights = modules.read_csv(_file_db_lights)
 	_list_motes = modules.read_csv(_file_db_motes, True)
-	
+	logging.info('it`s completed!')
+	return (_list_lights, _list_motes)
+
+def motes_no_lights(_df_4_fill, _file_db_lights, _file_db_motes):
+	#_list_lights, _list_motes = lists_in_dbase_from_file(_file_db_lights, _file_db_motes)	
+	_list_lights, _list_motes = lists_in_dbase_()	
+
 	_df_err_not_motes = _df_4_fill[~_df_4_fill['DevEUI'].isin(_list_motes)]
 	_df_4_fill = _df_4_fill[_df_4_fill['DevEUI'].isin(_list_motes)]
 	_df_err_in_lights = _df_4_fill[_df_4_fill['DevEUI'].isin(_list_lights)]
 	_df_4_fill = _df_4_fill[~_df_4_fill['DevEUI'].isin(_list_lights)]
-	logging.info(f'(not_motes == {len(_df_err_not_motes)}, in_lights == {len(_df_err_in_lights)}, 4_fill == {len(_df_4_fill)})')
+	logging.info('it`s completed!')
+	logging.info(f'\nnot_motes == {len(_df_err_not_motes)}, in_lights == {len(_df_err_in_lights)}, 4_fill == {len(_df_4_fill)}')
 	return (_df_err_not_motes, _df_err_in_lights, _df_4_fill)
 
 

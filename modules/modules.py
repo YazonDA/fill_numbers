@@ -1,3 +1,6 @@
+#!/usr/bin/env python3.6
+
+
 import pandas as pd
 import logging
 import string
@@ -28,6 +31,18 @@ def write_csv(arr, filename):
 			writer.writerow([i])
 	logging.info(f'{filename.split("/")[-1]} == {len(arr)} lines; it`s completed!')
 	return True
+
+def read_csv(filename, choice_key=False):
+	# for all non-xlsx
+	arr = []
+	with open(filename, 'r') as csv_file:
+		reader = csv.reader(csv_file, dialect = 'excel')
+		for i in reader:
+			if choice_key:
+				i[0] = '00' + i[0]
+			arr.append(*i)
+	logging.info(f'{filename.split("/")[-1]} == {len(arr)} lines; it`s completed!')
+	return arr
 
 def columns_add(in_df, add_list):
 	for col_name in add_list:

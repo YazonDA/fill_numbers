@@ -28,7 +28,6 @@ file_log = path_log + 'tmp_log'
 file_source = path_file + parser['FILES']['f_source']
 #file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
 file_4_fill = path_file + parser['FILES']['f_4_fill']
-#file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
 file_4_pass = path_file + parser['FILES']['f_4_pass']
 file_err_dev = path_file + parser['FILES']['f_err_dev']
 file_err_rfid = path_file + parser['FILES']['f_err_rfid']
@@ -91,8 +90,6 @@ def main():
 
 	write_xlsx(df_err_dev, file_err_dev)
 	
-	#df_doubles = df_4_fill[df_4_fill.duplicated(subset='DevEUI', keep=False)]
-	#df_4_fill = df_4_fill.drop_duplicates(subset='DevEUI', keep=False)
 	df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
 	df_4_fill = re_index(df_4_fill)
 

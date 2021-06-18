@@ -74,7 +74,7 @@ def re_index(in_df):
 	logging.info('it`s completed!')
 	return in_df
 
-def check_rus(deveui, const_en='AABBCCEE', const_ru='аАвВсСеЕ'):
+def check_rus(deveui, const_en='AABBCCEE', const_ru='аАвВсСеЕ', err_msg='f'):
 	try:
 		for tmp_rus in const_ru:
 			if tmp_rus in deveui:
@@ -82,9 +82,9 @@ def check_rus(deveui, const_en='AABBCCEE', const_ru='аАвВсСеЕ'):
 		return deveui
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return 'ffffffff'
+		return err_msg
 
-def check_seq(deveui, const_seq=['x005f', 'x000D']):
+def check_seq(deveui, const_seq=['x005f', 'x000D'], err_msg='f'):
 	try:
 		for seq in const_seq:
 			while seq in deveui:
@@ -92,36 +92,36 @@ def check_seq(deveui, const_seq=['x005f', 'x000D']):
 		return deveui
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return 'ffffffff'
+		return err_msg
 
-def check_hex(deveui, const_deveui=string.hexdigits):
+def check_hex(deveui, const_deveui=string.hexdigits, err_msg='f'):
 	try:
 		zzz = ''.join(i for i in deveui if i in const_deveui)
 		if len(zzz) == 0:
-			return 'ffffffff'
+			return err_msg
 		return zzz
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return 'ffffffff'
+		return err_msg
 
-def check_dec(rfid, const_rfid=string.ascii_letters+string.digits):
+def check_dec(rfid, const_rfid=string.ascii_letters+string.digits, err_msg='f'):
 	try:
 		zzz = ''.join(i for i in rfid if i in const_rfid)
 		if len(zzz) == 0:
-			return 'ffffffff'
+			return err_msg
 		return zzz
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return 'ffffffff'
+		return err_msg
 
-def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey']):
+def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey'], err_msg='f'):
 	try:
 		if anch[0] in deveui and anch[1] in deveui:
 			return deveui[8:25]
 		return deveui 
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return 'ffffffff'
+		return err_msg
 
 def repair_dev(deveui_list):
 	answer = []
@@ -138,15 +138,6 @@ def mask_deveui(deveui_list, pattern_deveui=r'0016[cC]00000[0-9a-fA-F]{6}'):
 	mask = []
 	for deveui in deveui_list:
 		mask.append(bool(re.fullmatch(pattern_deveui, deveui)))
-	logging.info('it`s completed!')
-	return mask
-
-def mask_double(deveui_list):
-	mask = []
-	for ind, deveui in enumerate(deveui_list):
-		mask.append(bool(deveui_list.count(deveui) == 1))
-		#if not bool(ind%5000):
-		logging.info(f'{ind} lines processed.')
 	logging.info('it`s completed!')
 	return mask
 

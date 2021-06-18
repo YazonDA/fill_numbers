@@ -27,6 +27,7 @@ def lists_in_dbase():
 		cursor.execute(request_lights)
 		_list_lights = cursor.fetchall()
 		return (_list_lights, _list_motes)
+		logging.info(f'RETURN isn`t working')
 
 	except (Exception, Error) as error:
 		print("Some error by work with PostgreSQL", error)
@@ -35,6 +36,7 @@ def lists_in_dbase():
 			cursor.close()
 			connection.close()
 			logging.info(f"\nConnection to PostgreSQL is closed\n")
+			#return (_list_lights, _list_motes)
 
 def lists_in_dbase_from_file(_file_db_lights, _file_db_motes):
 	_list_lights = modules.read_csv(_file_db_lights)
@@ -43,8 +45,11 @@ def lists_in_dbase_from_file(_file_db_lights, _file_db_motes):
 	return (_list_lights, _list_motes)
 
 def motes_no_lights(_df_4_fill, _file_db_lights, _file_db_motes):
+	logging.info(f'_df_4_fill {len(_df_4_fill)} , {type(_df_4_fill)}')
 	#_list_lights, _list_motes = lists_in_dbase_from_file(_file_db_lights, _file_db_motes)	
-	_list_lights, _list_motes = lists_in_dbase_()	
+	_list_lights, _list_motes = lists_in_dbase_()
+	logging.info(f'return from lists_in_dbase (_list_lights, _list_motes)')
+	logging.info(f'_list_lights {len(_list_lights)}, _list_motes {len(_list_motes)}')
 
 	_df_err_not_motes = _df_4_fill[~_df_4_fill['DevEUI'].isin(_list_motes)]
 	_df_4_fill = _df_4_fill[_df_4_fill['DevEUI'].isin(_list_motes)]

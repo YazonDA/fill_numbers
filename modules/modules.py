@@ -8,7 +8,8 @@ import re
 import csv
 import sys
 
-
+#---01---
+# Block for working with some files ------------------------------
 def read_xlsx(filename):
 	# special for XLSX
 	try:
@@ -43,7 +44,10 @@ def read_csv(filename, choice_key=False):
 			arr.append(*i)
 	logging.info(f'{filename.split("/")[-1]} == {len(arr)} lines; it`s completed!')
 	return arr
+#---01------------------------------------------------------------
 
+#---02---
+# Block for working with some columns & captions -----------------
 def columns_add(in_df, add_list):
 	for col_name in add_list:
 		in_df[col_name] = 0
@@ -61,6 +65,24 @@ def columns_rename(in_df, name_list):
 	logging.info('it`s completed!')
 	return in_df
 
+def columns_repair(in_df, dict_captions):
+	cols_source = dict_captions['cols_source']
+	order_list = dict_captions['cols_order']
+	add_list = dict_captions['cols_add']
+	name_list = dict_captions['cols_4_fill']
+	if list(in_df.columns) == dict_captions["cols_4_fill"]:
+		return in_df
+	elif list(in_df.columns) == dict_captions["cols_source"]:
+		# columns_add
+		for col_name in add_list:
+			in_df[col_name] = 0
+		# columns_order
+		in_df = in_df.reindex(columns=order_list)
+		# columns_rename
+		in_df.columns = name_list
+		return in_df
+	return False
+#---02------------------------------------------------------------
 def split_doubles(in_df, col_name):
 	df_doubles = in_df[in_df.duplicated(subset=col_name, keep=False)]
 	df_N_doubles = in_df.drop_duplicates(subset=col_name, keep=False)

@@ -25,9 +25,10 @@ path_file = path_main + parser["PATH"]["files"]
 
 # Names of some Files
 file_log = path_log + 'tmp_log'
-file_source = path_file + parser['FILES']['f_source']
+#file_source = path_file + parser['FILES']['f_source']
 #file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
 file_4_fill = path_file + parser['FILES']['f_4_fill']
+file_source = file_4_fill # THIS IS TEMPORARY! THEN REMOVE!
 file_4_pass = path_file + parser['FILES']['f_4_pass']
 file_err_dev = path_file + parser['FILES']['f_err_dev']
 file_err_rfid = path_file + parser['FILES']['f_err_rfid']
@@ -38,9 +39,11 @@ file_db_motes = path_file + 'tst_motes.result'
 file_db_lights = path_file + 'tst_lights.result'
 	
 # List of some  Column`s Names
+cols_source = parser['LISTS']['cols_source'].split('|')
 cols_order = parser['LISTS']['cols_order'].split('|')
 cols_add = parser['LISTS']['cols_add'].split('|')
-cols_rename = parser['LISTS']['cols_rename'].split('|')
+cols_4_fill = parser['LISTS']['cols_4_fill'].split('|')
+dict_cols_caption = {'cols_source': cols_source, 'cols_order': cols_order, 'cols_add': cols_add, 'cols_4_fill': cols_4_fill}
 dict_org_sect = dict(zip(parser['LISTS']['org_list'].split('|'), parser['LISTS']['sect_list'].split('|')))
 
 # sample for some compare
@@ -71,11 +74,14 @@ def main():
 	# Сохранить Файл-источник, как Файл-добавлений.
 	# Поменять местами, удалить не нужные и переименовать столбцы
 	df_4_fill = read_xlsx(file_source)
-	df_4_fill = columns_add(df_4_fill, cols_add)
-	df_4_fill = columns_order(df_4_fill, cols_order)
-	df_4_fill = columns_rename(df_4_fill, cols_rename)
+	#logging.info(f'\n{list(df_4_fill.columns)}')
+	df_4_fill = columns_repair(df_4_fill, dict_cols_caption)
+	#logging.info(f'\n{list(df_4_fill.columns)}')
+	if not isinstance(df_4_fill, pd.DataFrame):
+		print(f'It`s not a class pandas.core.frame.DataFrame !')
+		logging.error(f'Unknow format of columns in source-file!')
+		return 1
 	#-1---------------------------------------------------------------
-
 	
 	# 2--
 	# Обработать колонку DevEUI
@@ -136,7 +142,7 @@ def main():
 	df_4_fill['Сектор / Организация'] = list_org_rep
 	df_4_fill['N сектора'] = list_n_sect
 	#-5---------------------------------------------------------------
-	
+	'''
 	# 6--
 	# Отделить существующие в системе номера
 	
@@ -146,7 +152,7 @@ def main():
 	write_xlsx(df_err_in_lights, path_file + 'f_err_in_lights.xlsx')
 
 	#-6---------------------------------------------------------------
-	
+	'''
 	# 13--
 	# Записать финальный файл для заливки номеров
 	write_xlsx(df_4_fill, file_4_fill)

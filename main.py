@@ -27,7 +27,7 @@ def main():
 		logging.error(f'Unknow format of columns in source-file!')
 		return 1
 	#-1---------------------------------------------------------------
-	return 0
+
 	# 2--
 	# Обработать колонку DevEUI
 	list_deveui = df_4_fill['DevEUI'].tolist()
@@ -39,12 +39,14 @@ def main():
 	df_4_fill = df_4_fill[mask_dev]
 	df_4_fill = re_index(df_4_fill)
 
-	write_xlsx(df_err_dev, file_err_dev)
+	##write_xlsx(df_err_dev, file_err_dev)
+	write_add_xlsx(df_err_dev, file_source, 'DevEUI')
 	
 	df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
 	df_4_fill = re_index(df_4_fill)
 
-	write_xlsx(df_doubles, file_doubles)
+	#write_xlsx(df_doubles, file_doubles)
+	write_add_xlsx(df_doubles, file_source, 'Doubles')
 	#-2---------------------------------------------------------------
 
 	# 3--
@@ -58,7 +60,8 @@ def main():
 	df_4_fill = df_4_fill[mask_rf]
 	df_4_fill = re_index(df_4_fill)
 	
-	write_xlsx(df_err_rfid, file_err_rfid)
+	#write_xlsx(df_err_rfid, file_err_rfid)
+	write_add_xlsx(df_err_rfid, file_source, 'RFID')
 	#-3---------------------------------------------------------------
 
 	# 4--
@@ -77,7 +80,8 @@ def main():
 		df_4_fill['Координата Х WGS84, долгота'] = list_coord_X_rep
 		df_4_fill = df_4_fill[mask_coord]
 		df_4_fill = re_index(df_4_fill)
-		write_xlsx(df_err_coord, file_err_coord)
+		#write_xlsx(df_err_coord, file_err_coord)
+		write_add_xlsx(df_err_coord, file_source, 'COORD')
 	#-4---------------------------------------------------------------
 	
 	# 5--
@@ -93,14 +97,16 @@ def main():
 
 	df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill, file_db_lights, file_db_motes)
 
-	write_xlsx(df_err_not_motes, f_err_not_motes)
-	write_xlsx(df_err_in_lights, f_err_isin)
+	#write_xlsx(df_err_not_motes, f_err_not_motes)
+	write_add_xlsx(df_err_not_motes, file_source, 'NotMotes')
+	#write_xlsx(df_err_in_lights, f_err_isin)
+	write_add_xlsx(df_err_in_lights, file_source, 'inLight')
 
 	#-6---------------------------------------------------------------
 	'''
 	# 13--
 	# Записать финальный файл для заливки номеров
-	write_xlsx(df_4_fill, file_4_fill)
+	write_new_xlsx(df_4_fill, file_4_fill)
 	#-13---------------------------------------------------------------
 
 

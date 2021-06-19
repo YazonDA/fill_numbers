@@ -20,9 +20,15 @@ def read_xlsx(filename):
 		logging.error(f'FileNotFoundError, IsADirectoryError')
 		exit(1)
 
-def write_xlsx(in_df, filename):
+def write_new_xlsx(in_df, filename):
 	# special for XLSX
 	in_df.to_excel(filename, index=False)
+	logging.info(f'{filename.split("/")[-1]} == {len(in_df)} lines; it`s completed!')
+
+def write_add_xlsx(in_df, filename, pagename):
+	# special for existing XLSX
+	with pd.ExcelWriter(filename, mode='a') as ex_writer:
+		in_df.to_excel(ex_writer, sheet_name=pagename, index=False)
 	logging.info(f'{filename.split("/")[-1]} == {len(in_df)} lines; it`s completed!')
 
 def write_csv(arr, filename):

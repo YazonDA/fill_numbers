@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
+
 
 #import sys
 #import logging
@@ -27,14 +28,15 @@ file_log = path_log + 'tmp_log'
 file_source = path_file + parser['FILES']['f_source']
 #file_source = path_file + 'tst_f_source.xlsx' # THIS IS TEMPORARY! THEN REMOVE!
 file_4_fill = path_file + parser['FILES']['f_4_fill']
-#file_4_fill = path_file + 'tst_f_4_fill.xlsx'  # THIS IS TEMPORARY! THEN REMOVE!
 file_4_pass = path_file + parser['FILES']['f_4_pass']
 file_err_dev = path_file + parser['FILES']['f_err_dev']
 file_err_rfid = path_file + parser['FILES']['f_err_rfid']
 file_err_coord = path_file + parser['FILES']['f_err_coord']
 file_doubles = path_file + parser['FILES']['f_doubles']
 file_org = path_file + parser['FILES']['f_org']
-
+file_db_motes = path_file + 'tst_motes.result'
+file_db_lights = path_file + 'tst_lights.result'
+	
 # List of some  Column`s Names
 cols_order = parser['LISTS']['cols_order'].split('|')
 cols_add = parser['LISTS']['cols_add'].split('|')
@@ -88,8 +90,6 @@ def main():
 
 	write_xlsx(df_err_dev, file_err_dev)
 	
-	#df_doubles = df_4_fill[df_4_fill.duplicated(subset='DevEUI', keep=False)]
-	#df_4_fill = df_4_fill.drop_duplicates(subset='DevEUI', keep=False)
 	df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
 	df_4_fill = re_index(df_4_fill)
 
@@ -135,9 +135,22 @@ def main():
 	list_org_rep, list_n_sect = repair_org(list_org, dict_org_sect)
 	df_4_fill['Сектор / Организация'] = list_org_rep
 	df_4_fill['N сектора'] = list_n_sect
-
-	write_xlsx(df_4_fill, file_4_fill)
 	#-5---------------------------------------------------------------
+	
+	# 6--
+	# Отделить существующие в системе номера
+	
+	df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill, file_db_lights, file_db_motes)
+
+	write_xlsx(df_err_not_motes, path_file + 'f_err_not_motes.xlsx')
+	write_xlsx(df_err_in_lights, path_file + 'f_err_in_lights.xlsx')
+
+	#-6---------------------------------------------------------------
+	
+	# 13--
+	# Записать финальный файл для заливки номеров
+	write_xlsx(df_4_fill, file_4_fill)
+	#-13---------------------------------------------------------------
 
 
 	logging.info(f"Logging shutdown\n\n")

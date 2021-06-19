@@ -1,6 +1,6 @@
 LICENSE
 
-files/
-logs/
+files/*
+logs/*
 *pycache*
 *arch*

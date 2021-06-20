@@ -39,7 +39,7 @@ def lists_in_dbase_from_file(_file_db_lights, _file_db_motes):
 	logging.info('it`s completed!')
 	return (_list_lights, _list_motes)
 
-def motes_no_lights(_df_4_fill, _file_db_lights, _file_db_motes):
+def motes_no_lights(_df_4_fill, _file_db_lights=0, _file_db_motes=0):
 	#_list_lights, _list_motes = lists_in_dbase_from_file(_file_db_lights, _file_db_motes)	
 	_list_lights, _list_motes = lists_in_dbase()
 	

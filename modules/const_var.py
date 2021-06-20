@@ -29,15 +29,6 @@ logging.info('Logging is started!')
 # Names of some Files
 file_source = path_file + parser['FILES']['f_source']
 FILE_ERR_OUT = path_file + parser['FILES']['f_err_out']
-try:
-	zzz = os.system(f'cp {file_source} {FILE_ERR_OUT}')
-	if zzz:
-		raise FileNotFoundError('\ncan`t to find file named {file_source}')
-	logging.info(f'file_source is finded & copied')
-except (FileNotFoundError, IsADirectoryError):
-	logging.error(f'FileNotFoundError, IsADirectoryError')
-	exit(1)
-
 FILE_4_FILL = path_file + parser['FILES']['f_4_fill']
 
 ERR_MSG='f'

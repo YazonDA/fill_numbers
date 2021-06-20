@@ -11,7 +11,7 @@ def main():
 	logging.info('Main-Module is started!')
 
 	# 1--
-	# Сохранить Файл-источник, как Файл-добавлений -- it`s released in ConstVar-Module
+	# Сохранить Файл-источник, как Файл-добавлений - это в конце скрипта
 	# Поменять местами, удалить не нужные и переименовать столбцы
 	df_4_fill = read_xlsx(file_source)
 	#logging.info(df_4_fill.columns)
@@ -32,9 +32,8 @@ def main():
 	df_4_fill['DevEUI'] = list_repaired_deveui
 	df_4_fill = df_4_fill[mask_dev]
 	df_4_fill = re_index(df_4_fill)
-
-	##write_xlsx(df_err_dev, file_err_dev)
-	write_page_xlsx(df_err_dev, FILE_ERR_OUT, PAGE_ERR_DEV)
+	
+	write_new_xlsx(df_err_dev, FILE_ERR_OUT, PAGE_ERR_DEV)
 	
 	df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
 	df_4_fill = re_index(df_4_fill)
@@ -79,14 +78,15 @@ def main():
 	# 5--
 	# Обработать колонки Сектор / Организация & N сектора
 	list_org = df_4_fill['Сектор / Организация'].tolist()
-	list_org_rep, list_n_sect = repair_org(list_org, DICT_ORG_SECT)
+	list_org_rep, list_n_sect = repair_org(list_org)
 	df_4_fill['Сектор / Организация'] = list_org_rep
 	df_4_fill['N сектора'] = list_n_sect
 	#-5---------------------------------------------------------------
 	
 	# 6--
 	# Отделить существующие в системе номера
-	df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill, file_db_lights, file_db_motes)
+	#df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill, file_db_lights, file_db_motes)
+	df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill)
 
 	write_page_xlsx(df_err_not_motes, FILE_ERR_OUT, PAGE_ERR_NOT_MOT)
 	write_page_xlsx(df_err_in_lights, FILE_ERR_OUT, PAGE_ERR_ISIN)

@@ -23,16 +23,18 @@ def read_xlsx(filename):
 		logging.error(f'FileNotFoundError, IsADirectoryError')
 		exit(1)
 
-def write_new_xlsx(in_df, filename):
+def write_new_xlsx(in_df, filename, pagename=''):
 	# special for XLSX
-	in_df.to_excel(filename, index=False)
-	logging.info(f'{filename.split("/")[-1]} == {len(in_df)} lines; it`s completed!')
+	if pagename == '':
+		pagename = 'NoName'
+	in_df.to_excel(filename, index=False, sheet_name=pagename)
+	logging.info(f'{filename.split("/")[-1]} page {pagename} == {len(in_df)} lines; it`s completed!')
 
 def write_page_xlsx(in_df, filename, pagename):
 	# special for existing XLSX
 	with pd.ExcelWriter(filename, mode='a') as ex_writer:
 		in_df.to_excel(ex_writer, sheet_name=pagename, index=False)
-	logging.info(f'{filename.split("/")[-1]} == {len(in_df)} lines; it`s completed!')
+	logging.info(f'{filename.split("/")[-1]} page {pagename} == {len(in_df)} lines; it`s completed!')
 
 def write_csv(arr, filename):
 	with open(filename, 'w') as csv_file:
@@ -182,12 +184,12 @@ def check_coord(coord_list, minmax):
 	logging.info('it`s completed!')
 	return coord_list, mask
 
-def repair_org(org_list, dict_org_sect):
+def repair_org(org_list):
 	n_sect_list = []
 	for ind in range(len(org_list)):
-		if org_list[ind] not in dict_org_sect:
+		if org_list[ind] not in DICT_ORG_SECT:
 			org_list[ind] = 'Неопределен.'
-		n_sect_list.append(dict_org_sect[org_list[ind]])
+		n_sect_list.append(DICT_ORG_SECT[org_list[ind]])
 	logging.info('it`s completed!')
 	return (org_list, n_sect_list)
 

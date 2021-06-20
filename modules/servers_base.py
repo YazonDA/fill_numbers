@@ -6,7 +6,7 @@ from psycopg2 import Error
 import logging
 import sys
 
-import modules
+from modules import *
 
 
 def lists_in_dbase():
@@ -53,4 +53,4 @@ def motes_no_lights(_df_4_fill, _file_db_lights, _file_db_motes):
 
 
 if __name__ == '__main__':
-	sys.exit(print('You are make attempt to run this module. But it`s only libraries. Not for run!'))
+	sys.exit(print('You are maked attempt to run this module. But it`s only libraries. Not for run!'))

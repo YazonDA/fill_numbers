@@ -1,12 +1,13 @@
 import os
 import configparser
+import logging
 import string
 import re
 
 
-# ============== SET CONSTANTs & VARIABLES ===============
+# ============== SET CONSTANTs & VARIABLES e.t.c.===============
 
-# Names of some Paths
+# some Paths
 path_main = os.getcwd() + '/'
 
 path_set = path_main + 'setup/settings.ini'
@@ -17,22 +18,40 @@ path_log = path_main + parser["PATH"]["logs"]
 path_modul = path_main + parser["PATH"]["modules"]
 path_file = path_main + parser["PATH"]["files"]
 
-# Names of some Files
+# ============== SET LOGGER ===============
 FILE_LOGGER = path_log + 'tmp_log'
-file_source = path_file + parser['FILES']['f_source']
-file_4_fill = path_file + parser['FILES']['f_4_fill']
-file_4_pass = path_file + parser['FILES']['f_4_pass']
-file_err_dev = path_file + parser['FILES']['f_err_dev']
-file_err_rfid = path_file + parser['FILES']['f_err_rfid']
-file_err_coord = path_file + parser['FILES']['f_err_coord']
-file_doubles = path_file + parser['FILES']['f_doubles']
-file_org = path_file + parser['FILES']['f_org']
-file_err_not_motes = path_file + parser['FILES']['f_err_not_motes']
-file_isin = path_file + parser['FILES']['f_err_isin']
-#file_db_motes = path_file + 'tst_motes.result'
-#file_db_lights = path_file + 'tst_lights.result'
+LOGGER_FORMAT = "[%(asctime)s] %(levelname)s [%(funcName)s: %(lineno)d] %(message)s"
+logging.basicConfig(filename=FILE_LOGGER,
+						format=LOGGER_FORMAT,
+						level=logging.INFO)
+logging.info('Logging is started!')
 
-# List of some  Column`s Names
+# Names of some Files
+file_source = path_file + parser['FILES']['f_source']
+file_err_out = path_file + parser['FILES']['f_err_out']
+try:
+	zzz = os.system(f'cp {file_source} {file_err_out}')
+	if zzz:
+		raise FileNotFoundError('\ncan`t to find file named {file_source}')
+	logging.info(f'file_source is finded & copied')
+except (FileNotFoundError, IsADirectoryError):
+	logging.error(f'FileNotFoundError, IsADirectoryError')
+	exit(1)
+
+
+
+FILE_4_FILL = path_file + parser['FILES']['f_4_fill']
+
+# Names of some Pages (in xlsx)
+PAGE_ERR_DEV =		parser['PAGE_NAME']['err_dev']
+PAGE_ERR_RFID =		parser['PAGE_NAME']['err_rfid']
+PAGE_ERR_COORD =	parser['PAGE_NAME']['err_coord']
+PAGE_ERR_DOUBLES =	parser['PAGE_NAME']['err_doubles']
+PAGE_ERR_ORG =		parser['PAGE_NAME']['err_org']
+PAGE_ERR_NOT_MOT =	parser['PAGE_NAME']['err_not_mot']
+PAGE_ERR_ISIN =		parser['PAGE_NAME']['err_isin']
+
+# List of some Column`s Names
 cols_source = parser['LISTS']['cols_source'].split('|')
 cols_order = parser['LISTS']['cols_order'].split('|')
 cols_add = parser['LISTS']['cols_add'].split('|')
@@ -50,5 +69,3 @@ format_deveui = r'0016[cC]00000[0-9a-fA-F]{6}'
 minmax_Y = list(map(float, parser['COORD']['minmax_Y'].split('|')))
 minmax_X = list(map(float, parser['COORD']['minmax_X'].split('|')))
 
-# ============== SET LOGGER ===============
-LOGGER_FORMAT = "[%(asctime)s] %(levelname)s [%(funcName)s: %(lineno)d] %(message)s"

@@ -2,13 +2,11 @@
 
 import configparser
 import os
+#import logging
 
 from modules import *
 
 
-logging.basicConfig(filename=FILE_LOGGER,
-						format=LOGGER_FORMAT,
-						level=logging.INFO)
 
 # ============== MAIN ===============
 
@@ -16,18 +14,16 @@ def main():
 	logging.info('Main-Module is started!')
 
 	# 1--
-	# Сохранить Файл-источник, как Файл-добавлений.
+	# Сохранить Файл-источник, как Файл-добавлений -- it`s released in ConstVar-Module
 	# Поменять местами, удалить не нужные и переименовать столбцы
 	df_4_fill = read_xlsx(file_source)
-	#logging.info(f'\n{list(df_4_fill.columns)}')
 	df_4_fill = columns_repair(df_4_fill, dict_cols_caption)
-	#logging.info(f'\n{list(df_4_fill.columns)}')
 	if not isinstance(df_4_fill, pd.DataFrame):
 		print(f'It`s not a class pandas.core.frame.DataFrame !')
 		logging.error(f'Unknow format of columns in source-file!')
 		return 1
 	#-1---------------------------------------------------------------
-
+	return 0
 	# 2--
 	# Обработать колонку DevEUI
 	list_deveui = df_4_fill['DevEUI'].tolist()
@@ -40,13 +36,13 @@ def main():
 	df_4_fill = re_index(df_4_fill)
 
 	##write_xlsx(df_err_dev, file_err_dev)
-	write_add_xlsx(df_err_dev, file_source, 'DevEUI')
+	write_page_xlsx(df_err_dev, file_err_out, PAGE_ERR_DEV)
 	
 	df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
 	df_4_fill = re_index(df_4_fill)
 
 	#write_xlsx(df_doubles, file_doubles)
-	write_add_xlsx(df_doubles, file_source, 'Doubles')
+	write_page_xlsx(df_doubles, file_err_out, PAGE_ERR_DOUBLES)
 	#-2---------------------------------------------------------------
 
 	# 3--
@@ -61,7 +57,7 @@ def main():
 	df_4_fill = re_index(df_4_fill)
 	
 	#write_xlsx(df_err_rfid, file_err_rfid)
-	write_add_xlsx(df_err_rfid, file_source, 'RFID')
+	write_page_xlsx(df_err_rfid, file_err_out, PAGE_ERR_RFID)
 	#-3---------------------------------------------------------------
 
 	# 4--
@@ -81,7 +77,7 @@ def main():
 		df_4_fill = df_4_fill[mask_coord]
 		df_4_fill = re_index(df_4_fill)
 		#write_xlsx(df_err_coord, file_err_coord)
-		write_add_xlsx(df_err_coord, file_source, 'COORD')
+		write_page_xlsx(df_err_coord, file_err_out, PAGE_ERR_COORD)
 	#-4---------------------------------------------------------------
 	
 	# 5--
@@ -98,15 +94,15 @@ def main():
 	df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill, file_db_lights, file_db_motes)
 
 	#write_xlsx(df_err_not_motes, f_err_not_motes)
-	write_add_xlsx(df_err_not_motes, file_source, 'NotMotes')
+	write_page_xlsx(df_err_not_motes, file_err_out, PAGE_ERR_NOT_MOT)
 	#write_xlsx(df_err_in_lights, f_err_isin)
-	write_add_xlsx(df_err_in_lights, file_source, 'inLight')
+	write_page_xlsx(df_err_in_lights, file_err_out, PAGE_ERR_ISIN)
 
 	#-6---------------------------------------------------------------
 	'''
 	# 13--
 	# Записать финальный файл для заливки номеров
-	write_new_xlsx(df_4_fill, file_4_fill)
+	write_new_xlsx(df_4_fill, FILE_4_FILL)
 	#-13---------------------------------------------------------------
 
 

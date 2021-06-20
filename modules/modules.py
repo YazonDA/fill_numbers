@@ -25,7 +25,7 @@ def write_new_xlsx(in_df, filename):
 	in_df.to_excel(filename, index=False)
 	logging.info(f'{filename.split("/")[-1]} == {len(in_df)} lines; it`s completed!')
 
-def write_add_xlsx(in_df, filename, pagename):
+def write_page_xlsx(in_df, filename, pagename):
 	# special for existing XLSX
 	with pd.ExcelWriter(filename, mode='a') as ex_writer:
 		in_df.to_excel(ex_writer, sheet_name=pagename, index=False)
@@ -54,23 +54,6 @@ def read_csv(filename, choice_key=False):
 
 #---02---
 # Block for working with some columns & captions -----------------
-def columns_add(in_df, add_list):
-	for col_name in add_list:
-		in_df[col_name] = 0
-	logging.info('it`s completed!')
-	return in_df
-
-def columns_order(in_df, order_list):
-	in_df = in_df.reindex(columns=order_list)
-	logging.info('it`s completed!')
-	return in_df
-
-def columns_rename(in_df, name_list):
-	in_df.columns = name_list
-	#cols = list(tmp_df.columns.values)
-	logging.info('it`s completed!')
-	return in_df
-
 def columns_repair(in_df, dict_captions):
 	cols_source = dict_captions['cols_source']
 	order_list = dict_captions['cols_order']
@@ -89,6 +72,7 @@ def columns_repair(in_df, dict_captions):
 		return in_df
 	return False
 #---02------------------------------------------------------------
+
 def split_doubles(in_df, col_name):
 	df_doubles = in_df[in_df.duplicated(subset=col_name, keep=False)]
 	df_N_doubles = in_df.drop_duplicates(subset=col_name, keep=False)

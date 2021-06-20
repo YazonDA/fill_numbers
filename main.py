@@ -1,14 +1,9 @@
 #!/usr/bin/env python3.6
 
-import configparser
-import os
 
+import os
 from modules import *
 
-
-logging.basicConfig(filename=FILE_LOGGER,
-						format=LOGGER_FORMAT,
-						level=logging.INFO)
 
 # ============== MAIN ===============
 
@@ -16,18 +11,17 @@ def main():
 	logging.info('Main-Module is started!')
 
 	# 1--
-	# Сохранить Файл-источник, как Файл-добавлений.
+	# Сохранить Файл-источник, как Файл-добавлений -- it`s released in ConstVar-Module
 	# Поменять местами, удалить не нужные и переименовать столбцы
 	df_4_fill = read_xlsx(file_source)
-	#logging.info(f'\n{list(df_4_fill.columns)}')
-	df_4_fill = columns_repair(df_4_fill, dict_cols_caption)
-	#logging.info(f'\n{list(df_4_fill.columns)}')
+	#logging.info(df_4_fill.columns)
+	df_4_fill = columns_repair(df_4_fill)
 	if not isinstance(df_4_fill, pd.DataFrame):
 		print(f'It`s not a class pandas.core.frame.DataFrame !')
 		logging.error(f'Unknow format of columns in source-file!')
 		return 1
 	#-1---------------------------------------------------------------
-	return 0
+	
 	# 2--
 	# Обработать колонку DevEUI
 	list_deveui = df_4_fill['DevEUI'].tolist()
@@ -39,12 +33,14 @@ def main():
 	df_4_fill = df_4_fill[mask_dev]
 	df_4_fill = re_index(df_4_fill)
 
-	write_xlsx(df_err_dev, file_err_dev)
+	##write_xlsx(df_err_dev, file_err_dev)
+	write_page_xlsx(df_err_dev, FILE_ERR_OUT, PAGE_ERR_DEV)
 	
 	df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
 	df_4_fill = re_index(df_4_fill)
 
-	write_xlsx(df_doubles, file_doubles)
+	#write_xlsx(df_doubles, file_doubles)
+	write_page_xlsx(df_doubles, FILE_ERR_OUT, PAGE_ERR_DOUBLES)
 	#-2---------------------------------------------------------------
 
 	# 3--
@@ -58,7 +54,7 @@ def main():
 	df_4_fill = df_4_fill[mask_rf]
 	df_4_fill = re_index(df_4_fill)
 	
-	write_xlsx(df_err_rfid, file_err_rfid)
+	write_page_xlsx(df_err_rfid, FILE_ERR_OUT, PAGE_ERR_RFID)
 	#-3---------------------------------------------------------------
 
 	# 4--
@@ -66,8 +62,8 @@ def main():
 	list_coord_Y = df_4_fill['Координата Y WGS84, широта'].tolist()
 	list_coord_X = df_4_fill['Координата Х WGS84, долгота'].tolist()
 	
-	list_coord_Y_rep, mask_coord_Y = check_coord(list_coord_Y, minmax_Y)
-	list_coord_X_rep, mask_coord_X = check_coord(list_coord_X, minmax_X)
+	list_coord_Y_rep, mask_coord_Y = check_coord(list_coord_Y, MINMAX_Y)
+	list_coord_X_rep, mask_coord_X = check_coord(list_coord_X, MINMAX_X)
 	
 	if False in mask_coord_X or False in mask_coord_Y:
 		mask_coord = pd.Series(list(map(lambda x, y: x and y, mask_coord_X, mask_coord_Y)))
@@ -77,30 +73,28 @@ def main():
 		df_4_fill['Координата Х WGS84, долгота'] = list_coord_X_rep
 		df_4_fill = df_4_fill[mask_coord]
 		df_4_fill = re_index(df_4_fill)
-		write_xlsx(df_err_coord, file_err_coord)
+		write_page_xlsx(df_err_coord, FILE_ERR_OUT, PAGE_ERR_COORD)
 	#-4---------------------------------------------------------------
 	
 	# 5--
 	# Обработать колонки Сектор / Организация & N сектора
 	list_org = df_4_fill['Сектор / Организация'].tolist()
-	list_org_rep, list_n_sect = repair_org(list_org, dict_org_sect)
+	list_org_rep, list_n_sect = repair_org(list_org, DICT_ORG_SECT)
 	df_4_fill['Сектор / Организация'] = list_org_rep
 	df_4_fill['N сектора'] = list_n_sect
 	#-5---------------------------------------------------------------
-	'''
+	
 	# 6--
 	# Отделить существующие в системе номера
-
 	df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill, file_db_lights, file_db_motes)
 
-	write_xlsx(df_err_not_motes, f_err_not_motes)
-	write_xlsx(df_err_in_lights, f_err_isin)
-
+	write_page_xlsx(df_err_not_motes, FILE_ERR_OUT, PAGE_ERR_NOT_MOT)
+	write_page_xlsx(df_err_in_lights, FILE_ERR_OUT, PAGE_ERR_ISIN)
 	#-6---------------------------------------------------------------
-	'''
+	
 	# 13--
 	# Записать финальный файл для заливки номеров
-	write_xlsx(df_4_fill, file_4_fill)
+	write_new_xlsx(df_4_fill, FILE_4_FILL)
 	#-13---------------------------------------------------------------
 
 

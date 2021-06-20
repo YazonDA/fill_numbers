@@ -8,6 +8,9 @@ import re
 import csv
 import sys
 
+from modules import *
+
+
 #---01---
 # Block for working with some files ------------------------------
 def read_xlsx(filename):
@@ -20,9 +23,15 @@ def read_xlsx(filename):
 		logging.error(f'FileNotFoundError, IsADirectoryError')
 		exit(1)
 
-def write_xlsx(in_df, filename):
+def write_new_xlsx(in_df, filename):
 	# special for XLSX
 	in_df.to_excel(filename, index=False)
+	logging.info(f'{filename.split("/")[-1]} == {len(in_df)} lines; it`s completed!')
+
+def write_page_xlsx(in_df, filename, pagename):
+	# special for existing XLSX
+	with pd.ExcelWriter(filename, mode='a') as ex_writer:
+		in_df.to_excel(ex_writer, sheet_name=pagename, index=False)
 	logging.info(f'{filename.split("/")[-1]} == {len(in_df)} lines; it`s completed!')
 
 def write_csv(arr, filename):
@@ -48,41 +57,21 @@ def read_csv(filename, choice_key=False):
 
 #---02---
 # Block for working with some columns & captions -----------------
-def columns_add(in_df, add_list):
-	for col_name in add_list:
-		in_df[col_name] = 0
-	logging.info('it`s completed!')
-	return in_df
-
-def columns_order(in_df, order_list):
-	in_df = in_df.reindex(columns=order_list)
-	logging.info('it`s completed!')
-	return in_df
-
-def columns_rename(in_df, name_list):
-	in_df.columns = name_list
-	#cols = list(tmp_df.columns.values)
-	logging.info('it`s completed!')
-	return in_df
-
-def columns_repair(in_df, dict_captions):
-	cols_source = dict_captions['cols_source']
-	order_list = dict_captions['cols_order']
-	add_list = dict_captions['cols_add']
-	name_list = dict_captions['cols_4_fill']
-	if list(in_df.columns) == dict_captions["cols_4_fill"]:
+def columns_repair(in_df):
+	if list(in_df.columns) == NAME_LIST:
 		return in_df
-	elif list(in_df.columns) == dict_captions["cols_source"]:
+	elif list(in_df.columns) == COLS_SOURCE:
 		# columns_add
-		for col_name in add_list:
+		for col_name in ADD_LIST:
 			in_df[col_name] = 0
 		# columns_order
-		in_df = in_df.reindex(columns=order_list)
+		in_df = in_df.reindex(columns=ORDER_LIST)
 		# columns_rename
-		in_df.columns = name_list
+		in_df.columns = NAME_LIST
 		return in_df
 	return False
 #---02------------------------------------------------------------
+
 def split_doubles(in_df, col_name):
 	df_doubles = in_df[in_df.duplicated(subset=col_name, keep=False)]
 	df_N_doubles = in_df.drop_duplicates(subset=col_name, keep=False)
@@ -96,54 +85,54 @@ def re_index(in_df):
 	logging.info('it`s completed!')
 	return in_df
 
-def check_rus(deveui, const_en='AABBCCEE', const_ru='аАвВсСеЕ', err_msg='f'):
+def check_rus(deveui):
 	try:
-		for tmp_rus in const_ru:
+		for tmp_rus in CONST_RU:
 			if tmp_rus in deveui:
-				return ''.join(const_en[const_ru.index(chr)] if (chr in const_ru) else chr for chr in deveui)
+				return ''.join(CONST_EN[CONST_RU.index(chr)] if (chr in CONST_RU) else chr for chr in deveui)
 		return deveui
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return err_msg
+		return ERR_MSG
 
-def check_seq(deveui, const_seq=['x005f', 'x000D'], err_msg='f'):
+def check_seq(deveui):
 	try:
-		for seq in const_seq:
+		for seq in CONST_SEQ:
 			while seq in deveui:
 				deveui = deveui[:deveui.index(seq)] + deveui[deveui.index(seq) + len(seq):]
 		return deveui
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return err_msg
+		return ERR_MSG
 
-def check_hex(deveui, const_deveui=string.hexdigits, err_msg='f'):
+def check_hex(deveui):
 	try:
-		zzz = ''.join(i for i in deveui if i in const_deveui)
+		zzz = ''.join(i for i in deveui if i in CONST_DEVEUI)
 		if len(zzz) == 0:
-			return err_msg
+			return ERR_MSG
 		return zzz
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return err_msg
+		return ERR_MSG
 
-def check_dec(rfid, const_rfid=string.ascii_letters+string.digits, err_msg='f'):
+def check_dec(rfid):
 	try:
-		zzz = ''.join(i for i in rfid if i in const_rfid)
+		zzz = ''.join(i for i in rfid if i in CONST_RFID)
 		if len(zzz) == 0:
-			return err_msg
+			return ERR_MSG
 		return zzz
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return err_msg
+		return ERR_MSG
 
-def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey'], err_msg='f'):
+def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey']):
 	try:
 		if anch[0] in deveui and anch[1] in deveui:
 			return deveui[8:25]
 		return deveui 
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
-		return err_msg
+		return ERR_MSG
 
 def repair_dev(deveui_list):
 	answer = []
@@ -156,10 +145,10 @@ def repair_dev(deveui_list):
 	logging.info('it`s completed!')
 	return answer
 
-def mask_deveui(deveui_list, pattern_deveui=r'0016[cC]00000[0-9a-fA-F]{6}'):
+def mask_deveui(deveui_list):
 	mask = []
 	for deveui in deveui_list:
-		mask.append(bool(re.fullmatch(pattern_deveui, deveui)))
+		mask.append(bool(re.fullmatch(FORMAT_DEVEUI, deveui)))
 	logging.info('it`s completed!')
 	return mask
 
@@ -204,4 +193,4 @@ def repair_org(org_list, dict_org_sect):
 
 
 if __name__ == '__main__':
-	sys.exit(print('You are make attempt to run this module. But it`s only libraries. Not for run!'))
+	sys.exit(print('You are maked attempt to run this module. But it`s only libraries. Not for run!'))

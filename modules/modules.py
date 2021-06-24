@@ -188,10 +188,18 @@ def repair_org(org_list):
 	n_sect_list = []
 	for ind in range(len(org_list)):
 		if org_list[ind] not in DICT_ORG_SECT:
-			org_list[ind] = 'Неопределен.'
+			org_list[ind] = ERR_FIND_ORG
 		n_sect_list.append(DICT_ORG_SECT[org_list[ind]])
 	logging.info('it`s completed!')
 	return (org_list, n_sect_list)
+
+def repair_pole_road(in_list, comp_list):
+	n_sect_list = []
+	for ind in range(len(in_list)):
+		if in_list[ind] not in comp_list:
+			in_list[ind] = ERR_FIND_POS
+	logging.info('it`s completed!')
+	return in_list
 
 
 if __name__ == '__main__':

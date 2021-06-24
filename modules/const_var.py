@@ -14,9 +14,9 @@ path_set = path_main + 'setup/settings.ini'
 parser = configparser.ConfigParser()
 parser.read(path_set)
 
-path_log = path_main + parser["PATH"]["logs"]
-path_modul = path_main + parser["PATH"]["modules"]
-path_file = path_main + parser["PATH"]["files"]
+path_log = path_main + parser['PATH']['logs']
+path_modul = path_main + parser['PATH']['modules']
+path_file = path_main + parser['PATH']['files']
 
 # SET LOGGER
 FILE_LOGGER = path_log + 'tmp_log'
@@ -59,4 +59,7 @@ CONST_RFID = string.ascii_letters + string.digits
 FORMAT_DEVEUI = r'0016[cC]00000[0-9a-fA-F]{6}'
 MINMAX_Y = list(map(float, parser['COORD']['minmax_Y'].split('|')))
 MINMAX_X = list(map(float, parser['COORD']['minmax_X'].split('|')))
-
+ROAD_LIST = parser['LISTS']['road_set'].split('|')
+POLE_LIST = parser['LISTS']['pole'].split('|')
+ERR_FIND_ORG = parser['LISTS']['err_find_org']
+ERR_FIND_POS = parser['LISTS']['err_find_pos']

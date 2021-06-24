@@ -127,13 +127,16 @@ def check_dec(rfid):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
 		return ERR_MSG
 
-def check_bigQR(deveui, anch=['NwkSEncKey', 'SNwkSIntKey']):
+def check_bigQR(deveui, anch=ERR_ANCH_QR):
 	try:
-		if anch[0] in deveui and anch[1] in deveui:
-			return deveui[8:25]
+		if anch in deveui:
+			return (re.match(FORMAT_BIGQR, deveui)).group(1)
 		return deveui 
 	except (TypeError):
 		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		return ERR_MSG
+	except (AttributeError):
+		#logging.error(f'AttributeError: dev == {deveui}')
 		return ERR_MSG
 
 def repair_dev(deveui_list):

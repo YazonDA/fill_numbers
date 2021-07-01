@@ -27,33 +27,24 @@ def main():
 	list_deveui = df_4_fill['DevEUI'].tolist()
 	list_repaired_deveui = repair_dev(list_deveui)
 	mask_dev = pd.Series(mask_deveui(list_repaired_deveui))
-	df_err_dev = df_4_fill[~mask_dev]
-
+	
+	df_4_fill['err_dev'] = mask_dev
 	df_4_fill['DevEUI'] = list_repaired_deveui
-	df_4_fill = df_4_fill[mask_dev]
-	df_4_fill = re_index(df_4_fill)
-	
-	write_new_xlsx(df_err_dev, FILE_ERR_OUT, PAGE_ERR_DEV)
-	
-	df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
-	df_4_fill = re_index(df_4_fill)
 
-	#write_xlsx(df_doubles, file_doubles)
-	write_page_xlsx(df_doubles, FILE_ERR_OUT, PAGE_ERR_DOUBLES)
+	#df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
+	#df_4_fill = re_index(df_4_fill)
+
+	#write_page_xlsx(df_doubles, FILE_ERR_OUT, PAGE_ERR_DOUBLES)
 	#-2---------------------------------------------------------------
 
 	# 3--
 	# Обработать колонку RFID
 	list_rfid = df_4_fill['RFID значение метки на опоре'].tolist()
 	list_repaired_rfid = repair_rfid(list_rfid)
-	
 	mask_rf = pd.Series(mask_rfid(list_repaired_rfid))
-	df_err_rfid = df_4_fill[~mask_rf]
-	df_4_fill['RFID значение метки на опоре'] = list_repaired_rfid
-	df_4_fill = df_4_fill[mask_rf]
-	df_4_fill = re_index(df_4_fill)
 	
-	write_page_xlsx(df_err_rfid, FILE_ERR_OUT, PAGE_ERR_RFID)
+	df_4_fill['err_rfid'] = mask_rf
+	df_4_fill['RFID значение метки на опоре'] = list_repaired_rfid
 	#-3---------------------------------------------------------------
 
 	# 4--
@@ -103,6 +94,9 @@ def main():
 	'''
 	# 13--
 	# Записать финальный файл для заливки номеров
+	
+	df_4_fill = df_4_fill[df_4_fill['err_dev'].tolist()]
+	df_4_fill = df_4_fill[df_4_fill['err_rfid'].tolist()]
 	write_new_xlsx(df_4_fill, FILE_4_FILL)
 	#-13---------------------------------------------------------------
 

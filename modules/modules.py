@@ -74,6 +74,34 @@ def columns_repair(in_df):
 	return False
 #---02------------------------------------------------------------
 
+def repair_dev(deveui_list):
+	answer = []
+	for deveui in deveui_list:
+		if deveui:
+			_deveui = check_bigQR(str(deveui))
+			_deveui = check_seq(_deveui)
+			_deveui = check_rus(_deveui)
+			_deveui = check_hex(_deveui)
+			if check_format(_deveui):
+				deveui = _deveui.lower()
+			answer.append(deveui)
+			#assert isinstance(deveui, str), f'type({deveui}) is {type(deveui)}'
+	logging.info('it`s completed!')
+	return answer
+
+def mask_deveui(deveui_list):
+	mask = []
+	for deveui in deveui_list:
+		mask.append(check_format(deveui))
+	logging.info('it`s completed!')
+	return mask
+
+def check_format(some_string, format=FORMAT_DEVEUI):
+	try:
+		return bool(re.fullmatch(format, some_string))
+	except TypeError:
+		return False
+
 def split_doubles(in_df, col_name):
 	df_doubles = in_df[in_df.duplicated(subset=col_name, keep=False)]
 	df_N_doubles = in_df.drop_duplicates(subset=col_name, keep=False)
@@ -139,29 +167,14 @@ def check_bigQR(deveui, anch=ERR_ANCH_QR):
 		#logging.error(f'AttributeError: dev == {deveui}')
 		return ERR_MSG
 
-def repair_dev(deveui_list):
-	answer = []
-	for deveui in deveui_list:
-		deveui = check_bigQR(deveui)
-		deveui = check_seq(deveui)
-		deveui = check_rus(deveui)
-		deveui = check_hex(deveui)
-		answer.append(deveui.lower())
-	logging.info('it`s completed!')
-	return answer
-
-def mask_deveui(deveui_list):
-	mask = []
-	for deveui in deveui_list:
-		mask.append(bool(re.fullmatch(FORMAT_DEVEUI, deveui)))
-	logging.info('it`s completed!')
-	return mask
 
 def repair_rfid(rfid_list):
 	answer = []
 	for rfid in rfid_list:
 		zzz = check_seq(rfid)
 		zzz = check_dec(zzz)
+		if len(zzz) < 6:
+			zzz = rfid			
 		answer.append(zzz)
 	logging.info('it`s completed!')
 	return answer
@@ -169,7 +182,12 @@ def repair_rfid(rfid_list):
 def mask_rfid(rfid_list):
 	mask = []
 	for rfid in rfid_list:
-		mask.append(bool(len(rfid) >= 6))
+		try:
+			zzz = bool(len(rfid) >= 6)
+		except TypeError:
+			zzz = False
+		finally:
+			mask.append(zzz)
 	logging.info('it`s completed!')
 	return mask
 

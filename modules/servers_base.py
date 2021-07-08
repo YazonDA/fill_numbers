@@ -38,7 +38,27 @@ def lists_in_dbase():
 			cursor.close()
 			connection.close()
 			logging.info(f"\nConnection to PostgreSQL is closed\n")
+
+def check_stat(dev_list):
+	try:
+		# connect to DB
+		connection = psycopg2.connect("dbname='customer_01' user='lorawan' host='localhost' password='ves2018'")
+		# cursor for doing something
+		cursor = connection.cursor()
+		request_motes = f"SELECT lpad(to_hex(eui), 16, '0') FROM motes WHERE status IN {STATUSES};"
+
+		cursor.execute(request_motes)
+		_list_motes = list(map(lambda x: x[0], cursor.fetchall()))
+		return _list_motes
 	
+	except (Exception, Error) as error:
+		print("Some error by work with PostgreSQL", error)
+	finally:
+		if connection:
+			cursor.close()
+			connection.close()
+
+
 def lists_in_dbase_from_file(_file_db_lights, _file_db_motes):
 	_list_lights = modules.read_csv(_file_db_lights)
 	_list_motes = modules.read_csv(_file_db_motes, True)

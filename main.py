@@ -94,7 +94,6 @@ def main():
 	
 	# 6--
 	# Отделить существующие в системе номера
-	#df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill, file_db_lights, file_db_motes)
 	df_err_not_motes, df_err_in_lights_true, df_err_in_lights_false, df_4_fill = motes_no_lights(df_4_fill)
 
 	write_page_xlsx(df_err_not_motes, FILE_ERR_OUT, PAGE_ERR_NOT_MOT)
@@ -102,6 +101,15 @@ def main():
 	write_new_xlsx(df_err_in_lights_false, FILE_4_REFILL)
 	#-6---------------------------------------------------------------
 	
+	# 12--
+	# Отделить "плохие" статусы
+	list_deveui = df_4_fill['DevEUI'].tolist()
+	list_wrong_stat = check_stat(list_deveui)
+	df_err_bug_stat = df_4_fill[~df_4_fill['DevEUI'].isin(list_wrong_stat)]
+	df_4_fill = df_4_fill[df_4_fill['DevEUI'].isin(list_wrong_stat)]
+	write_new_xlsx(df_err_bug_stat, FILE_WR_STAT)
+	#-13---------------------------------------------------------------
+
 	# 13--
 	# Записать финальный файл для заливки номеров
 	write_new_xlsx(df_4_fill, FILE_4_FILL)

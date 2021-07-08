@@ -31,6 +31,7 @@ file_source = path_file + parser['FILES']['f_source']
 FILE_ERR_OUT = path_file + parser['FILES']['f_err_out']
 FILE_4_FILL = path_file + parser['FILES']['f_4_fill']
 FILE_4_REFILL = path_file + parser['FILES']['f_4_refill']
+FILE_WR_STAT = path_file + parser['FILES']['f_wr_stat']
 
 ERR_MSG='f'
 
@@ -50,6 +51,7 @@ ADD_LIST = parser['LISTS']['cols_add'].split('|')
 NAME_LIST = parser['LISTS']['cols_4_fill'].split('|')
 #dict_cols_caption = {'cols_source': cols_source, 'cols_order': cols_order, 'cols_add': cols_add, 'cols_4_fill': cols_4_fill}
 DICT_ORG_SECT = dict(zip(parser['LISTS']['org_list'].split('|'), parser['LISTS']['sect_list'].split('|')))
+STATUSES = tuple(parser['LISTS']['stat_list'].split('|'))
 
 # sample for some compare
 CONST_RU = 'аАвВсСеЕ'

@@ -30,6 +30,7 @@ logging.info('Logging is started!')
 file_source = path_file + parser['FILES']['f_source']
 FILE_ERR_OUT = path_file + parser['FILES']['f_err_out']
 FILE_4_FILL = path_file + parser['FILES']['f_4_fill']
+FILE_4_REFILL = path_file + parser['FILES']['f_4_refill']
 
 ERR_MSG='f'
 

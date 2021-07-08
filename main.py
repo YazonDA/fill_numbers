@@ -91,16 +91,17 @@ def main():
 	list_4_check = df_4_fill['Положение светильника на опоре'].tolist()
 	df_4_fill['Положение светильника на опоре'] = repair_pole_road(list_4_check, POLE_LIST)
 	#-5.1-------------------------------------------------------------
-	'''
+	
 	# 6--
 	# Отделить существующие в системе номера
 	#df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill, file_db_lights, file_db_motes)
-	df_err_not_motes, df_err_in_lights, df_4_fill = motes_no_lights(df_4_fill)
+	df_err_not_motes, df_err_in_lights_true, df_err_in_lights_false, df_4_fill = motes_no_lights(df_4_fill)
 
 	write_page_xlsx(df_err_not_motes, FILE_ERR_OUT, PAGE_ERR_NOT_MOT)
-	write_page_xlsx(df_err_in_lights, FILE_ERR_OUT, PAGE_ERR_ISIN)
+	write_page_xlsx(df_err_in_lights_true, FILE_ERR_OUT, PAGE_ERR_ISIN)
+	write_new_xlsx(df_err_in_lights_false, FILE_4_REFILL)
 	#-6---------------------------------------------------------------
-	'''
+	
 	# 13--
 	# Записать финальный файл для заливки номеров
 	write_new_xlsx(df_4_fill, FILE_4_FILL)

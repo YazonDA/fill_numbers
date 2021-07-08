@@ -55,7 +55,11 @@ def motes_no_lights(_df_4_fill, _file_db_lights=0, _file_db_motes=0):
 	_df_4_fill = _df_4_fill[~_df_4_fill['DevEUI'].isin(_list_lights_true)]
 	_df_err_in_lights_false = _df_4_fill[_df_4_fill['DevEUI'].isin(_list_lights_false)]
 	_df_4_fill = _df_4_fill[~_df_4_fill['DevEUI'].isin(_list_lights_false)]
-	logging.info(f'it`s completed!\nnot_motes == {len(_df_err_not_motes)}\nin_lights == {len(_df_err_in_lights)}\n4_fill == {len(_df_4_fill)}')
+	logging.info(f'it`s completed!\n\
+		not_motes == {len(_df_err_not_motes)}\n\
+		in_lights_true == {len(_df_err_in_lights_true)}\n\
+		in_lights_false == {len(_df_err_in_lights_false)}\n\
+		4_fill == {len(_df_4_fill)}')
 
 	return (_df_err_not_motes, _df_err_in_lights_true, _df_err_in_lights_false, _df_4_fill)
 

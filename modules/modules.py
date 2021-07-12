@@ -59,19 +59,35 @@ def read_csv(filename, choice_key=False):
 
 #---02---
 # Block for working with some columns & captions -----------------
-def columns_repair(in_df):
-	if list(in_df.columns) == NAME_LIST:
-		return in_df
-	elif list(in_df.columns) == COLS_SOURCE:
-		# columns_add
-		for col_name in ADD_LIST:
-			in_df[col_name] = 0
+def col_name_ord(in_df):
 		# columns_order
 		in_df = in_df.reindex(columns=ORDER_LIST)
 		# columns_rename
 		in_df.columns = NAME_LIST
 		return in_df
+
+def columns_repair(in_df, flag_datetime=False):
+	# check format/names in dataframe
+	if list(in_df.columns) == NAME_LIST:
+		return in_df # coz not need 'repaire'
+	elif list(in_df.columns) == COLS_SOURCE:
+		# columns_add
+		for col_name in ADD_LIST:
+			in_df[col_name] = 0
+
+		#>>>>>
+		# ATTENTION!!! it`s a temporary solution!!!
+		# not in here! not this logic!
+		if flag_datetime:
+			ORDER_LIST.append('Дата внесения изменения')
+			NAME_LIST.append('Дата ОЭК')
+			#logging.info(f'\nORDER_LIST\n{ORDER_LIST},\n NAME_LIST\n{NAME_LIST}')
+		#<<<<<
+
+		return col_name_ord(in_df) 
+
 	return False
+
 #---02------------------------------------------------------------
 
 def split_doubles(in_df, col_name):

@@ -28,6 +28,7 @@ logging.info('Logging is started!')
 
 # Names of some Files
 file_source = path_file + parser['FILES']['f_source']
+FILE_DT = path_file + parser['FILES']['f_datetime']
 FILE_ERR_OUT = path_file + parser['FILES']['f_err_out']
 FILE_4_FILL = path_file + parser['FILES']['f_4_fill']
 FILE_4_REFILL = path_file + parser['FILES']['f_4_refill']

@@ -9,60 +9,41 @@ from modules import *
 
 def main():
 	logging.info('Main-Module is started!')
-
+	
 	# 1--
 	# Сохранить Файл-источник, как Файл-добавлений - это в конце скрипта
 	# Поменять местами, удалить не нужные и переименовать столбцы
 	df_4_fill = read_xlsx(file_source)
-	df_4_fill = columns_repair(df_4_fill, True) # added не обязательный flag
-	# False (default) -- old functional
-	# True (option) -- not delete Datetime-column
 	if not isinstance(df_4_fill, pd.DataFrame):
 		print(f'It`s not a class pandas.core.frame.DataFrame !')
 		logging.error(f'Unknow format of columns in source-file!')
 		return 1
+
+	# 0--
+	# Подготовить колонку DevEUI для дальнейшего
+	list_deveui = df_4_fill['QR код контроллера'].tolist()
+	list_repaired_deveui = repair_dev(list_deveui)
+	mask_dev = pd.Series(mask_deveui(list_repaired_deveui))
+	df_datetime = df_4_fill[['QR код контроллера', 'Дата внесения изменения']]
+	write_new_xlsx(df_datetime, FILE_DT)
+	#-0---------------------------------------------------------------
+
+	df_4_fill = columns_repair(df_4_fill)
 	#-1---------------------------------------------------------------
 	
 	# 2--
 	# Обработать колонку DevEUI
-	list_deveui = df_4_fill['DevEUI'].tolist()
-	list_repaired_deveui = repair_dev(list_deveui)
-	mask_dev = pd.Series(mask_deveui(list_repaired_deveui))
 	df_err_dev = df_4_fill[~mask_dev]
-	
-	#>>>>>
-	logging.info(f'df_err_dev\n{df_err_dev.columns}')
-	logging.info(f'df_4_fill\n{df_4_fill.columns}')
-	#<<<<<
-	
-	#>>>>>
-	# ATTENTION!!! it`s a temporary solution!!!
-	# not in here! not this logic!
-	ORDER_LIST.remove('Дата внесения изменения')
-	NAME_LIST.remove('Дата ОЭК')
-	df_err_dev = col_name_ord(df_err_dev)
 	
 	df_4_fill['DevEUI'] = list_repaired_deveui
 	df_4_fill = df_4_fill[mask_dev]
-
-	df_datetime = df_4_fill[['DevEUI', 'Дата ОЭК']]
-
-	df_4_fill = col_name_ord(df_4_fill)
 	df_4_fill = re_index(df_4_fill)
-	
-	
-	logging.info(f'df_err_dev\n{df_err_dev.columns}')
-	logging.info(f'df_4_fill\n{df_4_fill.columns}')
-	logging.info(f'df_datetime\n{df_datetime.columns}')
-	return 1
-	#<<<<<
 	
 	write_new_xlsx(df_err_dev, FILE_ERR_OUT, PAGE_ERR_DEV)
 	
 	df_doubles, df_4_fill = split_doubles(df_4_fill, 'DevEUI')
 	df_4_fill = re_index(df_4_fill)
 
-	#write_xlsx(df_doubles, file_doubles)
 	write_page_xlsx(df_doubles, FILE_ERR_OUT, PAGE_ERR_DOUBLES)
 	#-2---------------------------------------------------------------
 

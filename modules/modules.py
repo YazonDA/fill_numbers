@@ -66,7 +66,7 @@ def col_name_ord(in_df):
 		in_df.columns = NAME_LIST
 		return in_df
 
-def columns_repair(in_df, flag_datetime=False):
+def columns_repair(in_df):
 	# check format/names in dataframe
 	if list(in_df.columns) == NAME_LIST:
 		return in_df # coz not need 'repaire'
@@ -74,18 +74,7 @@ def columns_repair(in_df, flag_datetime=False):
 		# columns_add
 		for col_name in ADD_LIST:
 			in_df[col_name] = 0
-
-		#>>>>>
-		# ATTENTION!!! it`s a temporary solution!!!
-		# not in here! not this logic!
-		if flag_datetime:
-			ORDER_LIST.append('Дата внесения изменения')
-			NAME_LIST.append('Дата ОЭК')
-			#logging.info(f'\nORDER_LIST\n{ORDER_LIST},\n NAME_LIST\n{NAME_LIST}')
-		#<<<<<
-
 		return col_name_ord(in_df) 
-
 	return False
 
 #---02------------------------------------------------------------

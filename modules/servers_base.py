@@ -49,7 +49,8 @@ def check_stat(dev_list):
 
 		cursor.execute(request_motes)
 		_list_motes = list(map(lambda x: x[0], cursor.fetchall()))
-		return _list_motes
+		_list_stat = list(map(lambda x: x[1], cursor.fetchall()))
+		return _list_motes, _list_stat
 	
 	except (Exception, Error) as error:
 		print("Some error by work with PostgreSQL", error)

@@ -49,8 +49,13 @@ def check_stat(dev_list):
 
 		cursor.execute(request_motes)
 		_list_motes = list(map(lambda x: x[0], cursor.fetchall()))
-		_list_stat = list(map(lambda x: x[1], cursor.fetchall()))
-		return _list_motes, _list_stat
+		_list_motes = list(map(lambda x: [x[0], x[1]], cursor.fetchall()))
+
+		request_motes = f"SELECT lpad(to_hex(eui), 16, '0'), status FROM motes WHERE lpad(to_hex(eui), 16, '0') IN {dev_list};"
+		cursor.execute(request_motes)
+		_list_stats = list(map(lambda x: x[1], cursor.fetchall()))
+
+		return (_list_motes, _list_stats)
 	
 	except (Exception, Error) as error:
 		print("Some error by work with PostgreSQL", error)

@@ -110,7 +110,7 @@ def main():
 	# Отделить "плохие" статусы
 	list_deveui = df_4_fill['DevEUI'].tolist()
 	list_wrong_stat, list_wrong_stat_self = check_stat(list_deveui)
-	write_page_xlsx(list_wrong_stat_self, FILE_ERR_OUT, 'WrongStat')
+	write_page_xlsx(pd.DataFrame(list_wrong_stat_self, columns=['deveui', 'status']), FILE_ERR_OUT, 'WrongStat')
 	df_err_bug_stat = df_4_fill[~df_4_fill['DevEUI'].isin(list_wrong_stat)]
 	df_4_fill = df_4_fill[df_4_fill['DevEUI'].isin(list_wrong_stat)]
 	write_new_xlsx(df_err_bug_stat, FILE_WR_STAT)

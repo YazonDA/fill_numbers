@@ -110,11 +110,8 @@ def main():
 	# Отделить "плохие" статусы
 	list_deveui = df_4_fill['DevEUI'].tolist()
 	list_wrong_stat, list_wrong_stat_self = check_stat(list_deveui)
+	write_page_xlsx(list_wrong_stat_self, FILE_ERR_OUT, 'WrongStat')
 	df_err_bug_stat = df_4_fill[~df_4_fill['DevEUI'].isin(list_wrong_stat)]
-	logging.info(f"df_err_bug_stat {len(df_err_bug_stat)}\n{df_err_bug_stat}")
-	#df_err_bug_stat['STATus'] = list_wrong_stat_self
-	logging.info(f"list_wrong_stat_self {len(list_wrong_stat_self)}\n{list_wrong_stat_self}")
-	return 0
 	df_4_fill = df_4_fill[df_4_fill['DevEUI'].isin(list_wrong_stat)]
 	write_new_xlsx(df_err_bug_stat, FILE_WR_STAT)
 	#-13---------------------------------------------------------------

@@ -109,8 +109,12 @@ def main():
 	#>>>>>
 	zzz = get_table(df_err_in_lights_false['DevEUI'].tolist())
 	tmp_columns = ORDER_LIST[:7] + ORDER_LIST[8:]
-	zzz = pd.DataFrame(zzz, columns=tmp_columns)
+	zzz = pd.DataFrame(zzz, columns=tmp_columns).sort_values(by='DevEUI')
+	print(zzz.columns)
 	print(zzz)
+	df_err_in_lights_false = df_err_in_lights_false.sort_values(by='DevEUI')
+	print(df_err_in_lights_false.columns)
+	print(df_err_in_lights_false)
 
 	return 0
 	

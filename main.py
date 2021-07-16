@@ -108,7 +108,8 @@ def main():
 	
 	#>>>>>
 	zzz = get_table(df_err_in_lights_false['DevEUI'].tolist())
-	zzz = pd.DataFrame(zzz, columns=list(range(14)))
+	tmp_columns = ORDER_LIST[:7] + ORDER_LIST[8:]
+	zzz = pd.DataFrame(zzz, columns=tmp_columns)
 	print(zzz)
 
 	return 0

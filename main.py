@@ -107,20 +107,17 @@ def main():
 	#-6---------------------------------------------------------------
 	
 	#>>>>>
+	write_new_xlsx(df_err_in_lights_false,'ERRinLIGHTSfalse')
 	zzz = df_err_in_lights_false['DevEUI'].tolist()
-	print(len(zzz))
 	zzz = get_table(zzz)
-	print(len(zzz))
 	tmp_columns = NAME_LIST[:7] + NAME_LIST[8:]
 	zzz = pd.DataFrame(zzz, columns=tmp_columns)
-	print(len(zzz))
 	zzz = zzz.sort_values(by='DevEUI')
-	print(len(zzz))
 	zzz = re_index(zzz)
-	print(len(zzz))
+	write_new_xlsx(zzz,'ZZZ')
 	df_err_in_lights_false = df_err_in_lights_false.sort_values(by='DevEUI')
 	df_err_in_lights_false = re_index(df_err_in_lights_false)
-
+	
 	return 0
 	
 	#<<<<<

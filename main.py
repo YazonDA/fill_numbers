@@ -107,19 +107,19 @@ def main():
 	#-6---------------------------------------------------------------
 	
 	#>>>>>
-	zzz = get_table(df_err_in_lights_false['DevEUI'].tolist())
+	zzz = df_err_in_lights_false['DevEUI'].tolist()
+	print(len(zzz))
+	zzz = get_table(zzz)
+	print(len(zzz))
 	tmp_columns = NAME_LIST[:7] + NAME_LIST[8:]
 	zzz = pd.DataFrame(zzz, columns=tmp_columns)
+	print(len(zzz))
 	zzz = zzz.sort_values(by='DevEUI')
+	print(len(zzz))
 	zzz = re_index(zzz)
-	print(zzz.columns)
-	print(zzz[0])
-	print(zzz[-1])
+	print(len(zzz))
 	df_err_in_lights_false = df_err_in_lights_false.sort_values(by='DevEUI')
 	df_err_in_lights_false = re_index(df_err_in_lights_false)
-	print(df_err_in_lights_false.columns)
-	print(df_err_in_lights_false[0])
-	print(df_err_in_lights_false[-1])
 
 	return 0
 	

@@ -106,6 +106,14 @@ def main():
 	write_new_xlsx(df_err_in_lights_false, FILE_4_REFILL)
 	#-6---------------------------------------------------------------
 	
+	#>>>>>
+	zzz = get_table(df_err_in_lights_false.tolist())
+	print(zzz)
+
+	return 0
+	
+	#<<<<<
+
 	# 12--
 	# Отделить "плохие" статусы
 	list_deveui = df_4_fill['DevEUI'].tolist()

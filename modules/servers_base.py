@@ -83,7 +83,7 @@ def get_table(dev_list):
 			WHERE lights.modem_dev_eui IN {tuple(dev_list)};"
 
 		cursor.execute(request_table)
-		_list_motes = list(map(lambda x: x[0], cursor.fetchall()))
+		_list_motes = list(cursor.fetchall())
 
 		return _list_motes
 	

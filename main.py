@@ -107,7 +107,8 @@ def main():
 	#-6---------------------------------------------------------------
 	
 	#>>>>>
-	zzz = get_table(df_err_in_lights_false.tolist())
+	zzz = get_table(df_err_in_lights_false['DevEUI'].tolist())
+	zzz = pd.DataFrame(zzz, columns=list(range(14)))
 	print(zzz)
 
 	return 0

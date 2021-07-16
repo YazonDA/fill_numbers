@@ -108,13 +108,18 @@ def main():
 	
 	#>>>>>
 	zzz = get_table(df_err_in_lights_false['DevEUI'].tolist())
-	tmp_columns = ORDER_LIST[:7] + ORDER_LIST[8:]
-	zzz = pd.DataFrame(zzz, columns=tmp_columns).sort_values(by='DevEUI')
+	tmp_columns = NAME_LIST[:7] + NAME_LIST[8:]
+	zzz = pd.DataFrame(zzz, columns=tmp_columns)
+	zzz = zzz.sort_values(by='DevEUI')
+	zzz = re_index(zzz)
 	print(zzz.columns)
-	print(zzz)
+	print(zzz[0])
+	print(zzz[-1])
 	df_err_in_lights_false = df_err_in_lights_false.sort_values(by='DevEUI')
+	df_err_in_lights_false = re_index(df_err_in_lights_false)
 	print(df_err_in_lights_false.columns)
-	print(df_err_in_lights_false)
+	print(df_err_in_lights_false[0])
+	print(df_err_in_lights_false[-1])
 
 	return 0
 	

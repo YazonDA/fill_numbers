@@ -1,49 +1,57 @@
 import os
+import sys
 import configparser
 import logging
-import string
-import re
+import pandas as pd
 
 
-# ============== SET CONSTANTs & VARIABLES e.t.c.===============
-
-# some Paths
+# ==============	Paths		===============
 path_main = os.getcwd() + '/'
 
-path_set = path_main + 'setup/settings.ini'
+path_settings = path_main + 'setup/settings.ini'
 parser = configparser.ConfigParser()
-parser.read(path_set)
+parser.read(path_settings)
 
-path_log = path_main + parser['PATH']['logs']
+path_logs = path_main + parser['PATH']['logs']
 path_modul = path_main + parser['PATH']['modules']
-path_file = path_main + parser['PATH']['files']
+path_files = path_main + parser['PATH']['files']
 
-# SET LOGGER
-FILE_LOGGER = path_log + 'tmp_log'
-LOGGER_FORMAT = "[%(asctime)s] %(levelname)s [%(funcName)s: %(lineno)d] %(message)s"
-logging.basicConfig(filename=FILE_LOGGER,
-						format=LOGGER_FORMAT,
-						level=logging.INFO)
-logging.info('Logging is started!')
+# ==============	File`s Name	===============
+FILE_SOURCE = path_files + parser['FILES']['f_source']
+FILE_DT = path_files + parser['FILES']['f_datetime']
+FILE_ERR_OUT = path_files + parser['FILES']['f_err_out']
+FILE_4_FILL = path_files + parser['FILES']['f_4_fill']
+FILE_4_REFILL = path_files + parser['FILES']['f_4_refill']
+FILE_WR_STAT = path_files + parser['FILES']['f_wr_stat']
 
-# Names of some Files
-file_source = path_file + parser['FILES']['f_source']
-FILE_DT = path_file + parser['FILES']['f_datetime']
-FILE_ERR_OUT = path_file + parser['FILES']['f_err_out']
-FILE_4_FILL = path_file + parser['FILES']['f_4_fill']
-FILE_4_REFILL = path_file + parser['FILES']['f_4_refill']
-FILE_WR_STAT = path_file + parser['FILES']['f_wr_stat']
-
-ERR_MSG='f'
-
-# Names of some Pages (in xlsx)
+# ==============	Page`s Name	===============
 PAGE_ERR_DEV =		parser['PAGE_NAME']['err_dev']
 PAGE_ERR_RFID =		parser['PAGE_NAME']['err_rfid']
 PAGE_ERR_COORD =	parser['PAGE_NAME']['err_coord']
 PAGE_ERR_DOUBLES =	parser['PAGE_NAME']['err_doubles']
 PAGE_ERR_ORG =		parser['PAGE_NAME']['err_org']
+PAGE_ERR_POLE_POSE =parser['PAGE_NAME']['err_pole_pos']
+PAGE_ERR_ROAD_POSE =parser['PAGE_NAME']['err_road_pos']
 PAGE_ERR_NOT_MOT =	parser['PAGE_NAME']['err_not_mot']
 PAGE_ERR_ISIN =		parser['PAGE_NAME']['err_isin']
+
+
+def init_logger(logger_format):
+	# set Logger
+	FILE_LOGGER = path_logs + parser['LOGGER']['name_log']
+	LOGGER_FORMAT = logger_format
+	print(FILE_LOGGER)
+	print(LOGGER_FORMAT)
+	logging.basicConfig(filename=FILE_LOGGER,
+							format=LOGGER_FORMAT,
+							level=logging.INFO)
+	logging.info('\nLogging is started!')
+
+
+'''
+
+ERR_MSG='f'
+
 
 # List of some Column`s Names
 COLS_SOURCE = parser['LISTS']['cols_source'].split('|')
@@ -69,3 +77,8 @@ POLE_LIST = parser['LISTS']['pole'].split('|')
 ERR_FIND_ORG = parser['LISTS']['err_find_org']
 ERR_FIND_POS = parser['LISTS']['err_find_pos']
 ERR_ANCH_QR = parser['LISTS']['bigQR_list']
+'''
+
+
+if __name__ == '__main__':
+	sys.exit(print('You are maked attempt to run this module. But it`s only libraries. Not for run!'))

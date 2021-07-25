@@ -6,7 +6,7 @@ from modules import *
 
 def main():
 	# ==============	Logger Start =============
-	logger_format = f'[%(asctime)s] %(levelname)s [%(filename)s/%(funcName)s: %(lineno)d] %(message)s'
+	logger_format = f'\n\t[%(asctime)s] %(levelname)s\n[%(filename)s\t\t%(funcName)s: %(lineno)d]\n%(message)s'
 	init_logger(logger_format)
 
 	# ==============	Local Data	===============
@@ -26,7 +26,6 @@ def main():
 	return:
 		???
 	'''
-	df_4_fill = pd.DataFrame()
 	df_4_fill = handling_db(df_4_fill)
 
 	# ==============	The End		===============

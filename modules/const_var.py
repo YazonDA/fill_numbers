@@ -45,7 +45,7 @@ def init_logger(logger_format):
 	logging.basicConfig(filename=FILE_LOGGER,
 							format=LOGGER_FORMAT,
 							level=logging.INFO)
-	logging.info('\nLogging is started!')
+	logging.info('Logging is started!')
 
 
 '''

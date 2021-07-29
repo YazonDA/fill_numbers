@@ -40,8 +40,6 @@ def init_logger(logger_format):
 	# set Logger
 	FILE_LOGGER = path_logs + parser['LOGGER']['name_log']
 	LOGGER_FORMAT = logger_format
-	print(FILE_LOGGER)
-	print(LOGGER_FORMAT)
 	logging.basicConfig(filename=FILE_LOGGER,
 							format=LOGGER_FORMAT,
 							level=logging.INFO)
@@ -80,5 +78,7 @@ ERR_ANCH_QR = parser['LISTS']['bigQR_list']
 '''
 
 
+
+
 if __name__ == '__main__':
-	sys.exit(print('You are maked attempt to run this module. But it`s only libraries. Not for run!'))
+	sys.exit(print('You tried to run this module. But this is only a library.\nNot for independent launch!'))

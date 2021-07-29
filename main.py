@@ -29,6 +29,7 @@ def main():
 	df_4_fill = handling_db(df_4_fill)
 
 	# ==============	The End		===============
+	print(df_4_fill)
 	logging.info(f"Logging shutdown\n\n")
 	logging.shutdown()
 	return 0

@@ -1,14 +1,10 @@
 #!/usr/bin/env python3.6
 
-'''
+
 import pandas as pd
 import logging
-import string
-import re
 import csv
 import sys
-'''
-from modules import *
 
 
 def read_xlsx(filename):

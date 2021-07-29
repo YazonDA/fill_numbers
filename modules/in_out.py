@@ -13,6 +13,7 @@ def read_xlsx(filename):
 		logging.info(f'{filename.split("/")[-1]} == {len(array)} lines; it`s completed!')
 		return array
 	except (FileNotFoundError, IsADirectoryError):
+		print(f'Error!\nFile or Directory is NotFound!')
 		logging.error(f'FileNotFoundError, IsADirectoryError')
 		exit(1)
 

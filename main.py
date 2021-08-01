@@ -34,7 +34,6 @@ def main():
 
 	# ==============	The End		===============
 	work_is_done(df_4_fill, my_config)
-	print(df_4_fill)
 	return 0
 
 

@@ -21,7 +21,7 @@ def main():
 	# create dict for dev/app pairs
 	list_4_dev = df_4_fill['DevEUI'].tolist()
 	tuple_4_dev = list(set(list_4_dev))
-	list_couples = get_table_(tuple_4_dev)
+	list_couples = get_table(tuple_4_dev)
 
 	#-5.1-------------------------------------------------------------
 	

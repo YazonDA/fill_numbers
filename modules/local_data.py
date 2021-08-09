@@ -7,7 +7,7 @@ import pandas as pd
 
 
 def handling_local(my_config):
-	import modules.in_out as fio
+	import modules.in_out as f_io
 	import modules.columns as cols
 	import modules.const_var as const_var
 	
@@ -18,7 +18,7 @@ def handling_local(my_config):
 	logging.info(f'File_source is:\n{name_source}')
 	
 	# load file-source to DF
-	tmp_df = fio.read_xlsx(name_source)
+	tmp_df = f_io.read_xlsx(name_source)
 	if not isinstance(tmp_df, pd.DataFrame):
 		print(f'Source-file is not a class pandas.core.frame.DataFrame !')
 		logging.error(f'Unknow format of source-file!')
@@ -39,11 +39,11 @@ def handling_local(my_config):
 	return tmp_df
 
 def work_is_done(in_df, my_config):
-	import modules.in_out as fio
+	import modules.in_out as f_io
 	import modules.const_var as const_var
 	name_4_fill = const_var.init_4_fill(my_config)
 
-	fio.write_new_xlsx(in_df, name_4_fill)
+	f_io.write_new_xlsx(in_df, name_4_fill)
 
 	logging.info(f"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\nLogging shutdown\n\n")
 	logging.shutdown()

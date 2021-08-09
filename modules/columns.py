@@ -83,6 +83,12 @@ def check_bigQR(deveui, repair_dev_dict):
 		#logging.error(f'AttributeError: dev == {deveui}')
 		return repair_dev_dict['ERR_MSG']
 
+def split_doubles(in_df, col_name):
+	df_doubles = in_df[in_df.duplicated(subset=col_name, keep=False)]
+	df_N_doubles = in_df.drop_duplicates(subset=col_name, keep=False)
+	logging.info('it`s completed!')
+	return df_doubles, df_N_doubles
+
 def repair_dev(in_df, in_config):
 	logging.info(f'Module is started!\n')
 	import modules.const_var as const_var
@@ -107,6 +113,11 @@ def repair_dev(in_df, in_config):
 	
 	fio.write_new_xlsx(df_err_dev, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DEV'])
 
+	df_err_doubles, in_df = split_doubles(in_df, 'DevEUI')
+	in_df = re_index(in_df)
+
+	fio.write_page_xlsx(df_err_doubles, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DOUBLES'])
+	
 	logging.info('it`s completed!')
 	return in_df
 

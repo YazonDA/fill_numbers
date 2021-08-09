@@ -51,6 +51,7 @@ def init_repair_dev(c_config):
 						'CONST_EN': 'AABBCCEE',
 						'CONST_DEVEUI': string.hexdigits,
 						'FILE_ERR_OUT': path_files + c_config['FILES']['f_err_out'],
+						'PAGE_ERR_DOUBLES': c_config['PAGE_NAME']['err_doubles'],
 						'PAGE_ERR_DEV': c_config['PAGE_NAME']['err_dev']}
 
 	return repair_dev_dict
@@ -67,7 +68,6 @@ FILE_WR_STAT = 	path_files + parser['FILES']['f_wr_stat'	]
 # ==============	Page`s Name		===============
 PAGE_ERR_RFID =		parser['PAGE_NAME']['err_rfid' 		]
 PAGE_ERR_COORD =	parser['PAGE_NAME']['err_coord'		]
-PAGE_ERR_DOUBLES =	parser['PAGE_NAME']['err_doubles'	]
 PAGE_ERR_ORG =		parser['PAGE_NAME']['err_org'		]
 PAGE_ERR_POLE_POSE =parser['PAGE_NAME']['err_pole_pos'	]
 PAGE_ERR_ROAD_POSE =parser['PAGE_NAME']['err_road_pos'	]

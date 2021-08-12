@@ -102,7 +102,10 @@ def split_doubles(in_df, col_name):
 
 def repair_dev(in_df, repair_dev_dict):
 	logging.info(f'Module is started!\n')
-	
+
+	# prepare file for error_pages
+	f_io.write_new_xlsx(pd.DataFrame(), repair_dev_dict['FILE_ERR_OUT'])
+
 	list_deveui = in_df['DevEUI'].tolist()
 
 	answer = []
@@ -113,14 +116,18 @@ def repair_dev(in_df, repair_dev_dict):
 		deveui = check_hex(deveui, repair_dev_dict)
 		answer.append(deveui.lower())
 	
-	mask_dev = pd.Series(mask_deveui(answer, repair_dev_dict))
-	df_err_dev = in_df[~mask_dev]
+	mask_dev = mask_deveui(answer, repair_dev_dict)
+	if False in mask_dev:
+		mask_dev = pd.Series(mask_dev)
+		
+
+		df_err_dev = in_df[~mask_dev]
+		
+		in_df['DevEUI'] = answer
+		in_df = in_df[mask_dev]
+		in_df = re_index(in_df)
 	
-	in_df['DevEUI'] = answer
-	in_df = in_df[mask_dev]
-	in_df = re_index(in_df)
-	
-	f_io.write_new_xlsx(df_err_dev, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DEV'])
+		f_io.write_page_xlsx(df_err_dev, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DEV'])
 
 	df_err_doubles, in_df = split_doubles(in_df, 'DevEUI')
 	in_df = re_index(in_df)

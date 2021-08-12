@@ -36,6 +36,7 @@ def handling_local(my_config):
 		print(f'Unknow format of columns in source-file!')
 		logging.error(f'Unknow format of columns in source-file!')
 		exit(1)
+	
 	# repair columns 'DevEUI' then split it (w/split by Doubles)
 	tmp_df = cols.repair_dev(tmp_df, repair_dev_dict)
 

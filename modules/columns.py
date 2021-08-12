@@ -6,6 +6,7 @@ import logging
 import configparser
 import re
 import pandas as pd
+import modules.in_out as fio
 
 def re_index(in_df):
 	tmp_new_ind = list(range(len(in_df)))
@@ -47,7 +48,17 @@ def check_hex(deveui, repair_dev_dict):
 			return repair_dev_dict['ERR_MSG']
 		return zzz
 	except (TypeError):
-		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "f"')
+		return repair_dev_dict['ERR_MSG']
+
+def check_digits(rfid, repair_dev_dict):
+	try:
+		zzz = ''.join(i for i in rfid if i in repair_dev_dict['CONST_RFID'])
+		if len(zzz) == 0:
+			return repair_dev_dict['ERR_MSG']
+		return zzz
+	except (TypeError):
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "f"')
 		return repair_dev_dict['ERR_MSG']
 
 def check_rus(deveui, repair_dev_dict):
@@ -57,7 +68,7 @@ def check_rus(deveui, repair_dev_dict):
 				return ''.join(repair_dev_dict['CONST_EN'][repair_dev_dict['CONST_RU'].index(chr)] if (chr in repair_dev_dict['CONST_RU']) else chr for chr in deveui)
 		return deveui
 	except (TypeError):
-		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "f"')
 		return repair_dev_dict['ERR_MSG']
 
 def check_seq(deveui, repair_dev_dict):
@@ -67,7 +78,7 @@ def check_seq(deveui, repair_dev_dict):
 				deveui = deveui[:deveui.index(seq)] + deveui[deveui.index(seq) + len(seq):]
 		return deveui
 	except (TypeError):
-		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "f"')
 		return repair_dev_dict['ERR_MSG']
 
 def check_bigQR(deveui, repair_dev_dict):
@@ -77,7 +88,7 @@ def check_bigQR(deveui, repair_dev_dict):
 			return (re.match(repair_dev_dict['FORMAT_BIGQR'], deveui)).group(1)
 		return deveui 
 	except (TypeError):
-		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "ffffffff"')
+		#logging.error(f'TypeError: argument of type "float" is not iterable. Returned "f"')
 		return repair_dev_dict['ERR_MSG']
 	except (AttributeError):
 		#logging.error(f'AttributeError: dev == {deveui}')
@@ -89,11 +100,9 @@ def split_doubles(in_df, col_name):
 	logging.info('it`s completed!')
 	return df_doubles, df_N_doubles
 
-def repair_dev(in_df, in_config):
+def repair_dev(in_df, repair_dev_dict):
 	logging.info(f'Module is started!\n')
-	import modules.const_var as const_var
-	import modules.in_out as fio
-	repair_dev_dict = const_var.init_repair_dev(in_config)
+	
 	list_deveui = in_df['DevEUI'].tolist()
 
 	answer = []
@@ -128,7 +137,36 @@ def mask_deveui(deveui_list, repair_dev_dict):
 	logging.info('it`s completed!')
 	return mask
 
+def mask_rfid(rfid_list, repair_dev_dict):
+	
+	mask = []
+	for rfid in rfid_list:
+		mask.append(bool(len(rfid) >= 6))
+	logging.info('it`s completed!')
+	return mask
 
+def repair_rfid(in_df, repair_dev_dict):
+	logging.info(f'Module is started!\n')
+	
+	list_rfid = in_df['RFID значение метки на опоре'].tolist()
+	
+	answer = []
+	for rfid in list_rfid:
+		rfid = check_seq(rfid, repair_dev_dict)
+		rfid = check_digits(rfid, repair_dev_dict)
+		answer.append(rfid)
+
+	mask = pd.Series(mask_rfid(answer, repair_dev_dict))
+	df_err_rfid = in_df[~mask]
+	
+	in_df['RFID значение метки на опоре'] = answer
+	in_df = in_df[mask]
+	in_df = re_index(in_df)
+	
+	fio.write_page_xlsx(df_err_rfid, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_RFID'])
+	
+	logging.info('it`s completed!')
+	return in_df
 
 if __name__ == '__main__':
 	sys.exit(print('You tried to run this module. But this is only a library.\nNot for independent launch!'))

@@ -13,6 +13,9 @@ def handling_local(my_config):
 	
 	logging.info(f'Module is started!\n')
 
+	# create dict of repair_some_data
+	repair_dev_dict = const_var.init_repair_dev(my_config)
+
 	# get name of file-source from config
 	name_source = const_var.init_files(my_config)
 	logging.info(f'File_source is:\n{name_source}')
@@ -33,8 +36,11 @@ def handling_local(my_config):
 		print(f'Unknow format of columns in source-file!')
 		logging.error(f'Unknow format of columns in source-file!')
 		exit(1)
+	# repair columns 'DevEUI' then split it (w/split by Doubles)
+	tmp_df = cols.repair_dev(tmp_df, repair_dev_dict)
 
-	tmp_df = cols.repair_dev(tmp_df, my_config)
+	# repair  columns 'RFID'
+	tmp_df = cols.repair_rfid(tmp_df, repair_dev_dict)
 
 	return tmp_df
 

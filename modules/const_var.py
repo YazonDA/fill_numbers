@@ -50,9 +50,11 @@ def init_repair_dev(c_config):
 						'CONST_RU': 'аАвВсСеЕ',
 						'CONST_EN': 'AABBCCEE',
 						'CONST_DEVEUI': string.hexdigits,
+						'CONST_RFID': string.ascii_letters + string.digits,
 						'FILE_ERR_OUT': path_files + c_config['FILES']['f_err_out'],
 						'PAGE_ERR_DOUBLES': c_config['PAGE_NAME']['err_doubles'],
-						'PAGE_ERR_DEV': c_config['PAGE_NAME']['err_dev']}
+						'PAGE_ERR_DEV': c_config['PAGE_NAME']['err_dev'],
+						'PAGE_ERR_RFID': c_config['PAGE_NAME']['err_rfid']}
 
 	return repair_dev_dict
 
@@ -66,7 +68,6 @@ FILE_4_REFILL = path_files + parser['FILES']['f_4_refill'	]
 FILE_WR_STAT = 	path_files + parser['FILES']['f_wr_stat'	]
 
 # ==============	Page`s Name		===============
-PAGE_ERR_RFID =		parser['PAGE_NAME']['err_rfid' 		]
 PAGE_ERR_COORD =	parser['PAGE_NAME']['err_coord'		]
 PAGE_ERR_ORG =		parser['PAGE_NAME']['err_org'		]
 PAGE_ERR_POLE_POSE =parser['PAGE_NAME']['err_pole_pos'	]
@@ -85,7 +86,6 @@ DICT_ORG_SECT = dict(zip(parser['LISTS']['org_list'].split('|'), parser['LISTS']
 STATUSES = tuple(parser['LISTS']['stat_list'].split('|'))
 
 # sample for some compare
-CONST_RFID = string.ascii_letters + string.digits
 MINMAX_Y = list(map(float, parser['COORD']['minmax_Y'].split('|')))
 MINMAX_X = list(map(float, parser['COORD']['minmax_X'].split('|')))
 ROAD_LIST = parser['LISTS']['road_set'].split('|')

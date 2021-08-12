@@ -6,7 +6,7 @@ import logging
 import configparser
 import re
 import pandas as pd
-import modules.in_out as fio
+import modules.in_out as f_io
 
 def re_index(in_df):
 	tmp_new_ind = list(range(len(in_df)))
@@ -120,12 +120,12 @@ def repair_dev(in_df, repair_dev_dict):
 	in_df = in_df[mask_dev]
 	in_df = re_index(in_df)
 	
-	fio.write_new_xlsx(df_err_dev, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DEV'])
+	f_io.write_new_xlsx(df_err_dev, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DEV'])
 
 	df_err_doubles, in_df = split_doubles(in_df, 'DevEUI')
 	in_df = re_index(in_df)
 
-	fio.write_page_xlsx(df_err_doubles, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DOUBLES'])
+	f_io.write_page_xlsx(df_err_doubles, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DOUBLES'])
 	
 	logging.info('it`s completed!')
 	return in_df
@@ -163,7 +163,7 @@ def repair_rfid(in_df, repair_dev_dict):
 	in_df = in_df[mask]
 	in_df = re_index(in_df)
 	
-	fio.write_page_xlsx(df_err_rfid, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_RFID'])
+	f_io.write_page_xlsx(df_err_rfid, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_RFID'])
 	
 	logging.info('it`s completed!')
 	return in_df

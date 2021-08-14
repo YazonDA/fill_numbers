@@ -107,6 +107,7 @@ def repair_dev(in_df, repair_dev_dict):
 	f_io.write_new_xlsx(pd.DataFrame(), repair_dev_dict['FILE_ERR_OUT'])
 
 	columns_name = 'DevEUI'
+	rule_of_mask = repair_dev_dict['all_mask'][columns_name]
 	list_deveui = in_df[columns_name].tolist()
 
 	answer = []
@@ -117,7 +118,7 @@ def repair_dev(in_df, repair_dev_dict):
 		deveui = check_hex(deveui, repair_dev_dict)
 		answer.append(deveui.lower())
 	
-	mask = get_mask(answer, columns_name)
+	mask = get_mask(answer, rule_of_mask)
 	if False in mask:
 		mask = pd.Series(mask)
 		
@@ -138,44 +139,24 @@ def repair_dev(in_df, repair_dev_dict):
 	logging.info('it`s completed!')
 	return in_df
 
-def mask_deveui(deveui_list, repair_dev_dict):
-	mask = []
-	for deveui in deveui_list:
-		mask.append(bool(re.fullmatch(repair_dev_dict['FORMAT_DEVEUI'], deveui)))
-	logging.info('it`s completed!')
-	return mask
-
-def mask_rfid(rfid_list, repair_dev_dict):
-	
-	mask = []
-	for rfid in rfid_list:
-		mask.append(bool(len(rfid) >= 6))
-	logging.info('it`s completed!')
-	return mask
-
-def get_mask(targ_list, target, all_mask=''):
+def get_mask(in_list, in_rule):
 	'''
-	targ_list -- list of column`s values (dev, rfid, etc). from def_repair_
-	target -- name of column
-	all_mask -- dict of functions for each mask. for now, declare it here (coz all_mask='' in entry)
+	in_list -- list of column`s values (dev, rfid, etc). from def_repair_
+	in_rule -- special lambda for each column 
 	'''
-
-	all_mask = {'RFID значение метки на опоре': lambda x: bool(len(x) >= 6),
-				'DevEUI': lambda x: bool(re.fullmatch(r'0016[cC]00000[0-9a-fA-F]{6}', x))
-				}
-
 	mask = []
 
-	for piece in targ_list:
-		mask.append(all_mask[target](piece))
+	for piece in in_list:
+		mask.append(in_rule(piece))
 
-	logging.info(f'it`s completed for {target}!')
+	logging.info(f'it`s completed!')
 	return mask
 
 def repair_rfid(in_df, repair_dev_dict):
 	logging.info(f'Module is started!\n')
 	
 	columns_name = 'RFID значение метки на опоре'
+	rule_of_mask = repair_dev_dict['all_mask'][columns_name]
 	list_rfid = in_df[columns_name].tolist()
 	
 	answer = []
@@ -185,7 +166,7 @@ def repair_rfid(in_df, repair_dev_dict):
 		answer.append(rfid)
 
 	#mask = pd.Series(mask_rfid(answer, repair_dev_dict))
-	mask = pd.Series(get_mask(answer, columns_name))
+	mask = pd.Series(get_mask(answer, rule_of_mask))
 
 	df_err_rfid = in_df[~mask]
 	

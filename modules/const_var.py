@@ -54,10 +54,22 @@ def init_repair_dev(c_config):
 						'FILE_ERR_OUT': path_files + c_config['FILES']['f_err_out'],
 						'PAGE_ERR_DOUBLES': c_config['PAGE_NAME']['err_doubles'],
 						'PAGE_ERR_DEV': c_config['PAGE_NAME']['err_dev'],
-						'PAGE_ERR_RFID': c_config['PAGE_NAME']['err_rfid']}
+						'PAGE_ERR_RFID': c_config['PAGE_NAME']['err_rfid'],
+						'all_mask': init_mask_rules(c_config)
+						}
 
 	return repair_dev_dict
 
+def init_mask_rules(c_config):
+	'''
+	temporary i`m define dictionary here.
+	the next time it`s need to transfer into setting.ini
+	'''
+	all_mask = {'RFID значение метки на опоре': lambda x: bool(len(x) >= 6),
+				'DevEUI': lambda x: bool(re.fullmatch(r'0016[cC]00000[0-9a-fA-F]{6}', x))
+				}
+
+	return all_mask
 
 '''
 # ==============	Paths		===============

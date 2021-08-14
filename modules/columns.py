@@ -106,7 +106,8 @@ def repair_dev(in_df, repair_dev_dict):
 	# prepare file for error_pages
 	f_io.write_new_xlsx(pd.DataFrame(), repair_dev_dict['FILE_ERR_OUT'])
 
-	list_deveui = in_df['DevEUI'].tolist()
+	columns_name = 'DevEUI'
+	list_deveui = in_df[columns_name].tolist()
 
 	answer = []
 	for deveui in list_deveui:
@@ -116,20 +117,20 @@ def repair_dev(in_df, repair_dev_dict):
 		deveui = check_hex(deveui, repair_dev_dict)
 		answer.append(deveui.lower())
 	
-	mask_dev = mask_deveui(answer, repair_dev_dict)
-	if False in mask_dev:
-		mask_dev = pd.Series(mask_dev)
+	mask = get_mask(answer, columns_name)
+	if False in mask:
+		mask = pd.Series(mask)
 		
 
-		df_err_dev = in_df[~mask_dev]
+		df_err_dev = in_df[~mask]
 		
-		in_df['DevEUI'] = answer
-		in_df = in_df[mask_dev]
+		in_df[columns_name] = answer
+		in_df = in_df[mask]
 		in_df = re_index(in_df)
 	
 		f_io.write_page_xlsx(df_err_dev, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DEV'])
 
-	df_err_doubles, in_df = split_doubles(in_df, 'DevEUI')
+	df_err_doubles, in_df = split_doubles(in_df, columns_name)
 	in_df = re_index(in_df)
 
 	f_io.write_page_xlsx(df_err_doubles, repair_dev_dict['FILE_ERR_OUT'], repair_dev_dict['PAGE_ERR_DOUBLES'])
@@ -152,10 +153,30 @@ def mask_rfid(rfid_list, repair_dev_dict):
 	logging.info('it`s completed!')
 	return mask
 
+def get_mask(targ_list, target, all_mask=''):
+	'''
+	targ_list -- list of column`s values (dev, rfid, etc). from def_repair_
+	target -- name of column
+	all_mask -- dict of functions for each mask. for now, declare it here (coz all_mask='' in entry)
+	'''
+
+	all_mask = {'RFID значение метки на опоре': lambda x: bool(len(x) >= 6),
+				'DevEUI': lambda x: bool(re.fullmatch(r'0016[cC]00000[0-9a-fA-F]{6}', x))
+				}
+
+	mask = []
+
+	for piece in targ_list:
+		mask.append(all_mask[target](piece))
+
+	logging.info(f'it`s completed for {target}!')
+	return mask
+
 def repair_rfid(in_df, repair_dev_dict):
 	logging.info(f'Module is started!\n')
 	
-	list_rfid = in_df['RFID значение метки на опоре'].tolist()
+	columns_name = 'RFID значение метки на опоре'
+	list_rfid = in_df[columns_name].tolist()
 	
 	answer = []
 	for rfid in list_rfid:
@@ -163,10 +184,12 @@ def repair_rfid(in_df, repair_dev_dict):
 		rfid = check_digits(rfid, repair_dev_dict)
 		answer.append(rfid)
 
-	mask = pd.Series(mask_rfid(answer, repair_dev_dict))
+	#mask = pd.Series(mask_rfid(answer, repair_dev_dict))
+	mask = pd.Series(get_mask(answer, columns_name))
+
 	df_err_rfid = in_df[~mask]
 	
-	in_df['RFID значение метки на опоре'] = answer
+	in_df[columns_name] = answer
 	in_df = in_df[mask]
 	in_df = re_index(in_df)
 	

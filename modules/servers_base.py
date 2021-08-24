@@ -12,7 +12,7 @@ from modules import *
 def lists_in_dbase():
 	try:
 		# connect to DB
-		connection = psycopg2.connect("dbname='customer_01' user='lorawan' host='localhost' password='ves2018'")
+		connection = psycopg2.connect("dbname='customer_01' user='lorawan' host='pg-db.vms.oug' password='ves2018'")
 		# cursor for doing something
 		cursor = connection.cursor()
 		request_motes = f"SELECT lpad(to_hex(eui), 16, '0') FROM motes;"
@@ -39,7 +39,7 @@ def lists_in_dbase():
 def check_stat(dev_list):
 	try:
 		# connect to DB
-		connection = psycopg2.connect("dbname='customer_01' user='lorawan' host='localhost' password='ves2018'")
+		connection = psycopg2.connect("dbname='customer_01' user='lorawan' host='pg-db.vms.oug' password='ves2018'")
 		# cursor for doing something
 		cursor = connection.cursor()
 		request_motes = f"SELECT lpad(to_hex(eui), 16, '0') FROM motes WHERE status IN {STATUSES};"
@@ -64,7 +64,7 @@ def check_stat(dev_list):
 def get_table(dev_list):
 	try:
 		# connect to DB
-		connection = psycopg2.connect("dbname='customer_01' user='lorawan' host='localhost' password='ves2018'")
+		connection = psycopg2.connect("dbname='customer_01' user='lorawan' host='pg-db.vms.oug' password='ves2018'")
 		# cursor for doing something
 		cursor = connection.cursor()
 		request_table = f"SELECT \

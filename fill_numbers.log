@@ -1,0 +1,17 @@
+[2021-09-03 10:17:54,071] INFO [main.main: 16] 
+
+Starting cl4f logging...
+[2021-09-03 10:22:15,453] INFO [main.main: 16] 
+
+Starting cl4f logging...
+[2021-09-03 10:22:15,453] INFO [service.run: 19] Starting cl4f service...
+[2021-09-03 10:22:15,654] INFO [client.read_xlsx: 40] 0002_f_source.xlsx == 2 lines; it`s completed!
+[2021-09-03 10:22:15,656] INFO [client.name_and_order: 47] Module is started!
+
+[2021-09-03 10:26:08,497] INFO [main.main: 16] 
+
+Starting Fill_Numbers logging...
+[2021-09-03 10:26:08,497] INFO [service.run: 19] Starting fill_numbers service...
+[2021-09-03 10:26:08,596] INFO [client.read_xlsx: 40] 0002_f_source.xlsx == 2 lines; it`s completed!
+[2021-09-03 10:26:08,599] INFO [client.name_and_order: 47] Module is started!
+

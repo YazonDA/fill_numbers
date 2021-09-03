@@ -3,7 +3,7 @@ import typing
 import logging
 import sys
 
-import cl4f
+import fill_numbers
 
 
 class Service(object):
@@ -11,12 +11,12 @@ class Service(object):
         parser = configparser.ConfigParser()
         parser.read(config)
 
-        self._client = cl4f.Client(parser["client"])
-        self._local = cl4f.Local(parser["local_handler"])
-        self._dbase = cl4f.DBase(parser["dbase_handler"])
+        self._client = fill_numbers.Client(parser["client"])
+        self._local = fill_numbers.Local(parser["local_handler"])
+        self._dbase = fill_numbers.DBase(parser["dbase_handler"])
 
     def run(self) -> bool:
-        logging.info("Starting cl4f service...")
+        logging.info("Starting fill_numbers service...")
 
         try:
             self._client.run()

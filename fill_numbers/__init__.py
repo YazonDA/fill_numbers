@@ -1,12 +1,12 @@
 # вызов обработок таблицы
 #??? вопрос НУЖЕН-ЛИ ???
-from modules.client import Client
+from fill_numbers.client import Client
 
 # обработка таблицы локальными методами
-from modules.local_handler import Local
+from fill_numbers.local_handler import Local
 
 # обработка таблицы методами баз даных
-from modules.dbase_handler import DBase
+from fill_numbers.dbase_handler import DBase
 
 # обработчик задачи
-from modules.service import Service
+from fill_numbers.service import Service

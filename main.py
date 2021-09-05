@@ -13,14 +13,16 @@ def main(argv: typing.Sequence[str]) -> int:
     logging.basicConfig(filename="fill_numbers.log",
                         format=line_format,
                         level=logging.INFO)
-    logging.info(f"\n\nStarting Fill_Numbers logging...")
+    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>\
+                \nStarting Fill_Numbers logging...\
+                \n>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     service = fill_numbers.Service("fill_numbers.ini")
-    graceful = service.run()
+    answer = service.run()
 
     logging.shutdown()
 
-    return 0 if graceful else 1
+    return 0 if answer else 1
 
 
 if __name__ == "__main__":

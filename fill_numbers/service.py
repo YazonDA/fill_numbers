@@ -26,5 +26,6 @@ class Service(object):
             logging.error("Run Client failed!")
             return False
 
+        self._client._df = self._local.doit(self._client)
         print(self._client._df)
         return True

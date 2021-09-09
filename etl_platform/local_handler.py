@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import typing
+import logging
 
 import etl_platform
 
@@ -11,6 +12,7 @@ class Local(object):
         self._tuple_4_repair = ''
 
     def run(self, _client) -> bool:
+        logging.info(f'Module is started!')
         NAME_LIST = tuple(_client._setting['columns']['cols_4_fill'].split('|'))
         NAME_IND = self._setting['repair']['index_4_rep']
 

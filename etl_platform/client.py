@@ -20,6 +20,7 @@ class Client(object):
         self._df = ''
 
     def run(self) -> bool:
+        logging.info(f'Module is started!')
         # get DataFrame
         self.read_xlsx()
 

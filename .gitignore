@@ -1,6 +1,7 @@
 LICENSE
 
 files/*
-logs/*
 *pycache*
 *arch*
+*.log
+*.xlsx

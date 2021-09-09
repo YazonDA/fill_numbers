@@ -1,19 +1,122 @@
-[2021-09-03 14:07:26,348] INFO [main.main: 16] 
-
-Starting Fill_Numbers logging...
-[2021-09-03 14:07:26,349] INFO [service.run: 19] Starting fill_numbers service...
-[2021-09-03 14:07:26,453] INFO [client.read_xlsx: 38] 0005_f_source.xlsx == 5 lines; it`s completed!
-[2021-09-03 14:07:26,458] INFO [client.name_and_order: 46] Module is started!
-
-[2021-09-03 14:07:26,460] INFO [client.name_and_order: 69] Module will return this DF:
-5 rows; <class 'pandas.core.frame.DataFrame'>
-[2021-09-03 14:08:39,417] INFO [main.main: 16] >>>>>>>>>>>>>>>>>>>>>>>>>        
-
-Starting Fill_Numbers logging...        
+[2021-09-09 16:32:57,684] INFO [main.main: 16] 
+>>>>>>>>>>>>>>>>>>>>>>>>>                
+Starting Fill_Numbers logging...                
 >>>>>>>>>>>>>>>>>>>>>>>>>
-[2021-09-03 14:08:39,417] INFO [service.run: 19] Starting fill_numbers service...
-[2021-09-03 14:08:39,530] INFO [client.read_xlsx: 38] 0005_f_source.xlsx == 5 lines; it`s completed!
-[2021-09-03 14:08:39,533] INFO [client.name_and_order: 46] Module is started!
+[2021-09-09 16:32:57,685] INFO [service.run: 19] Starting fill_numbers service...
+[2021-09-09 16:32:57,795] INFO [client.read_xlsx: 38] 0005_f_source.xlsx == 5 lines; it`s completed!
+[2021-09-09 16:32:57,798] INFO [client.name_and_order: 46] Module is started!
 
-[2021-09-03 14:08:39,535] INFO [client.name_and_order: 69] Module will return this DF:
+[2021-09-09 16:32:57,800] INFO [client.name_and_order: 69] Module will return this DF:
+5 rows; <class 'pandas.core.frame.DataFrame'>
+[2021-09-09 16:32:57,832] INFO [main.main: 23] 
+<<<<<<<<<<<<<<<<<<<<<<<<<                
+Closing Fill_Numbers logging...                
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+[2021-09-09 16:35:59,936] INFO [main.main: 16] 
+>>>>>>>>>>>>>>>>>>>>>>>>>                
+Starting Fill_Numbers logging...                
+>>>>>>>>>>>>>>>>>>>>>>>>>
+[2021-09-09 16:35:59,936] INFO [service.run: 19] Starting fill_numbers service...
+[2021-09-09 16:36:00,047] INFO [client.read_xlsx: 38] 0005_f_source.xlsx == 5 lines; it`s completed!
+[2021-09-09 16:36:00,050] INFO [client.name_and_order: 46] Module is started!
+
+[2021-09-09 16:36:00,052] INFO [client.name_and_order: 69] Module will return this DF:
+5 rows; <class 'pandas.core.frame.DataFrame'>
+[2021-09-09 16:36:00,067] INFO [main.main: 23] 
+<<<<<<<<<<<<<<<<<<<<<<<<<                
+Closing Fill_Numbers logging...                
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+[2021-09-09 16:58:44,215] INFO [main.main: 16] 
+>>>>>>>>>>>>>>>>>>>>>>>>>                
+Starting Fill_Numbers logging...                
+>>>>>>>>>>>>>>>>>>>>>>>>>
+[2021-09-09 16:58:44,215] INFO [service.run: 19] Starting fill_numbers service...
+[2021-09-09 16:58:44,325] INFO [client.read_xlsx: 38] 0005_f_source.xlsx == 5 lines; it`s completed!
+[2021-09-09 16:58:44,328] INFO [client.name_and_order: 46] Module is started!
+
+[2021-09-09 16:58:44,330] INFO [client.name_and_order: 69] Module will return this DF:
+5 rows; <class 'pandas.core.frame.DataFrame'>
+[2021-09-09 16:58:44,344] INFO [main.main: 23] 
+<<<<<<<<<<<<<<<<<<<<<<<<<                
+Closing Fill_Numbers logging...                
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+[2021-09-09 17:00:39,854] INFO [main.main: 16] 
+>>>>>>>>>>>>>>>>>>>>>>>>>                
+Starting Fill_Numbers logging...                
+>>>>>>>>>>>>>>>>>>>>>>>>>
+[2021-09-09 17:00:39,855] INFO [service.run: 19] Starting fill_numbers service...
+[2021-09-09 17:00:39,981] INFO [client.read_xlsx: 42] 0005_f_source.xlsx == 5 lines; it`s completed!
+[2021-09-09 17:00:39,984] INFO [client.name_and_order: 50] Module is started!
+
+[2021-09-09 17:00:39,986] INFO [client.name_and_order: 73] Module will return this DF:
+5 rows; <class 'pandas.core.frame.DataFrame'>
+[2021-09-09 17:01:13,399] INFO [main.main: 16] 
+>>>>>>>>>>>>>>>>>>>>>>>>>                
+Starting Fill_Numbers logging...                
+>>>>>>>>>>>>>>>>>>>>>>>>>
+[2021-09-09 17:01:13,399] INFO [service.run: 19] Starting fill_numbers service...
+[2021-09-09 17:01:13,509] INFO [client.read_xlsx: 42] 0005_f_source.xlsx == 5 lines; it`s completed!
+[2021-09-09 17:01:13,512] INFO [client.name_and_order: 50] Module is started!
+
+[2021-09-09 17:01:13,514] INFO [client.name_and_order: 73] Module will return this DF:
+5 rows; <class 'pandas.core.frame.DataFrame'>
+[2021-09-09 17:01:13,529] INFO [main.main: 23] 
+<<<<<<<<<<<<<<<<<<<<<<<<<                
+Closing Fill_Numbers logging...                
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+[2021-09-09 17:02:31,208] INFO [main.main: 16] 
+>>>>>>>>>>>>>>>>>>>>>>>>>                
+Starting Fill_Numbers logging...                
+>>>>>>>>>>>>>>>>>>>>>>>>>
+[2021-09-09 17:02:31,209] INFO [service.run: 19] Starting fill_numbers service...
+[2021-09-09 17:02:31,320] INFO [client.read_xlsx: 42] 0005_f_source.xlsx == 5 lines; it`s completed!
+[2021-09-09 17:02:31,323] INFO [client.name_and_order: 50] Module is started!
+
+[2021-09-09 17:02:31,324] INFO [client.name_and_order: 73] Module will return this DF:
+5 rows; <class 'pandas.core.frame.DataFrame'>
+[2021-09-09 17:02:31,358] INFO [main.main: 23] 
+<<<<<<<<<<<<<<<<<<<<<<<<<                
+Closing Fill_Numbers logging...                
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+[2021-09-09 17:03:57,680] INFO [main.main: 16] 
+>>>>>>>>>>>>>>>>>>>>>>>>>                
+Starting Fill_Numbers logging...                
+>>>>>>>>>>>>>>>>>>>>>>>>>
+[2021-09-09 17:03:57,680] INFO [service.run: 19] Starting fill_numbers service...
+[2021-09-09 17:03:57,790] INFO [client.read_xlsx: 43] 0005_f_source.xlsx == 5 lines; it`s completed!
+[2021-09-09 17:03:57,815] INFO [client.name_and_order: 51] Module is started!
+
+[2021-09-09 17:03:57,817] INFO [client.name_and_order: 74] Module will return this DF:
+5 rows; <class 'pandas.core.frame.DataFrame'>
+[2021-09-09 17:03:57,847] INFO [main.main: 23] 
+<<<<<<<<<<<<<<<<<<<<<<<<<                
+Closing Fill_Numbers logging...                
+<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+[2021-09-09 17:59:56,391] INFO [main.main: 16] 
+>>>>>>>>>>>>>>>>>>>>>>>>>                
+Starting Fill_Numbers logging...                
+>>>>>>>>>>>>>>>>>>>>>>>>>
+[2021-09-09 17:59:56,392] INFO [service.run: 19] Starting fill_numbers service...
+[2021-09-09 17:59:56,504] INFO [client.read_xlsx: 42] 0005_f_source.xlsx == 5 lines; it`s completed!
+[2021-09-09 17:59:56,507] INFO [client.name_and_order: 50] Module is started!
+
+[2021-09-09 17:59:56,508] INFO [client.name_and_order: 73] Module will return this DF:
 5 rows; <class 'pandas.core.frame.DataFrame'>

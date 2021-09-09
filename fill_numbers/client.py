@@ -26,10 +26,14 @@ class Client(object):
         # change all NaN to ''
         self._df = self._df.fillna('')
 
-        # set only needed columns, rename and set order
+        # set only needed columns, rename it and set order
         self.name_and_order()
 
         return len(self._df) >= 0
+
+    def tmp_print(self) -> bool:
+        print(self._df)
+        return True
 
     def read_xlsx(self) -> bool:
         try:
@@ -67,7 +71,6 @@ class Client(object):
             in_df.columns = NAME_LIST
 
             logging.info(f'Module will return this DF:\n{len(in_df)} rows; {type(in_df)}')
-            print(f'Module will return this DF:\n{len(in_df)} rows; {type(in_df)}')
             if not isinstance(in_df, pd.DataFrame):
                 logging.error(f'Unknow format of columns in source-file!')
                 exit(1)

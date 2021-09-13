@@ -8,8 +8,8 @@ import etl_platform
 
 
 class Service(object):
-    def __init__(self):
-        self._client = etl_platform.Client()
+    def __init__(self, source):
+        self._client = etl_platform.Client(source)
 
     def run(self) -> bool:
         logging.info("Starting etl_platform service...")

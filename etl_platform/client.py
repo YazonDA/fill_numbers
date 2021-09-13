@@ -11,18 +11,24 @@ import etl_platform
 
 
 class Client(object):
-    def __init__(self):
+    def __init__(self, source):
 
         self._setting = etl_platform.set_client()
         self._local = etl_platform.Local()
         self._dbase = etl_platform.DBase()
 
-        self._df = ''
+        path_main = os.getcwd() + '/'
+        if source == 'Non file':
+            files = self._setting['file_name']
+        elif source[-4:] == 'xlsx':
+            files = source
+        FILENAME = path_main + files['source']
+
+        # get DataFrame
+        self._df = self.read_xlsx()
 
     def run(self) -> bool:
         logging.info(f'Module is started!')
-        # get DataFrame
-        self.read_xlsx()
 
         # change all NaN to ''
         self._df = self._df.fillna('')
@@ -41,17 +47,12 @@ class Client(object):
         return True
 
 
-    def read_xlsx(self) -> bool:
+    def read_xlsx(self) -> pd.DataFrame:
         try:
-            path_main = os.getcwd() + '/'
-            files = self._setting['file_name']
-            
-            FILENAME = path_main + files['source']
             array = pd.read_excel(FILENAME, engine='openpyxl')
             
             logging.info(f'{FILENAME.split("/")[-1]} == {len(array)} lines; it`s completed!')
-            self._df = array
-            return True
+            return array
         
         except (FileNotFoundError, IsADirectoryError):
             logging.error(f'FileNotFoundError, IsADirectoryError')

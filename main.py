@@ -16,7 +16,15 @@ def main(argv: typing.Sequence[str]) -> int:
     logging.info(f"\n\nStarting Etl Platform logging...\
                 \n>>>>>>>>>>>>>>>>>>>>>>>>>")
 
-    service = etl_platform.Service()
+    if len(argv) > 1:
+        SOURCE_FILE = argv[1]
+    elif len(argv) == 1:
+        SOURCE_FILE = 'Non file'
+    else:
+        logging.error('Something wrong & unreal')
+        return 1
+
+    service = etl_platform.Service(SOURCE_FILE)
     answer = service.run()
 
     logging.info(f"\n<<<<<<<<<<<<<<<<<<<<<<<<<\

@@ -7,7 +7,13 @@ from modules import *
 
 # ============== MAIN ===============
 
-def main():
+def main(argv):
+	global file_source
+	global FILE_4_FILL
+	if len(argv) == 3:
+		file_source = argv[1]
+		FILE_4_FILL = argv[2]
+
 	logging.info('Main-Module is started!')
 	
 	# 1--
@@ -97,6 +103,7 @@ def main():
 	df_4_fill['Положение светильника на опоре'] = repair_pole_road(list_4_check, POLE_LIST)
 	#-5.1-------------------------------------------------------------
 	
+	'''
 	# 6--
 	# Отделить существующие в системе номера
 	df_err_not_motes, df_err_in_lights_true, df_err_in_lights_false, df_4_fill = motes_no_lights(df_4_fill)
@@ -105,33 +112,17 @@ def main():
 	write_page_xlsx(df_err_in_lights_true, FILE_ERR_OUT, PAGE_ERR_ISIN)
 	write_new_xlsx(df_err_in_lights_false, FILE_4_REFILL)
 	#-6---------------------------------------------------------------
-	'''
-	#>>>>>
-	write_new_xlsx(df_err_in_lights_false,'ERRinLIGHTSfalse')
-	zzz = df_err_in_lights_false['DevEUI'].tolist()
-	zzz = get_table(zzz)
-	tmp_columns = NAME_LIST[:7] + NAME_LIST[8:]
-	zzz = pd.DataFrame(zzz, columns=tmp_columns)
-	zzz = zzz.sort_values(by='DevEUI')
-	zzz = re_index(zzz)
-	write_new_xlsx(zzz,'ZZZ')
-	df_err_in_lights_false = df_err_in_lights_false.sort_values(by='DevEUI')
-	df_err_in_lights_false = re_index(df_err_in_lights_false)
+	
 
-	return 0
-	#<<<<<
-	'''
 	# 12--
 	# Отделить "плохие" статусы
 	list_deveui = df_4_fill['DevEUI'].tolist()
 	list_wrong_stat, list_wrong_stat_self = check_stat(list_deveui)
 	write_page_xlsx(pd.DataFrame(list_wrong_stat_self, columns=['deveui', 'status']), FILE_ERR_OUT, 'WrongStat')
-	'''	DUPLICATE DATA
-	'''
 	df_err_bug_stat = df_4_fill[~df_4_fill['DevEUI'].isin(list_wrong_stat)]
 	write_new_xlsx(df_err_bug_stat, FILE_WR_STAT)
 	df_4_fill = df_4_fill[df_4_fill['DevEUI'].isin(list_wrong_stat)]
-	#-13---------------------------------------------------------------
+	'''#-13---------------------------------------------------------------
 
 	# 13--
 	# Записать финальный файл для заливки номеров
@@ -145,4 +136,4 @@ def main():
 
 
 if __name__ == '__main__':
-	sys.exit(main())
+	sys.exit(main(sys.argv))

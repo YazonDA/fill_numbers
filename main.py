@@ -118,6 +118,8 @@ def main(argv):
 	list_deveui = df_4_fill['DevEUI'].tolist()
 	list_wrong_stat, list_wrong_stat_self = check_stat(list_deveui)
 	write_page_xlsx(pd.DataFrame(list_wrong_stat_self, columns=['deveui', 'status']), FILE_ERR_OUT, 'WrongStat')
+	df_4_fill = df_4_fill[df_4_fill['DevEUI'].isin(list_wrong_stat)]
+	df_4_fill = re_index(df_4_fill)
 	#-12---------------------------------------------------------------
 
 	# 13--

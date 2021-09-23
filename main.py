@@ -24,8 +24,8 @@ def main():
 	list_deveui = df_4_fill['QR код контроллера'].tolist()
 	list_repaired_deveui = repair_dev(list_deveui)
 	mask_dev = pd.Series(mask_deveui(list_repaired_deveui))
-	df_datetime = df_4_fill[['QR код контроллера', 'Дата внесения изменения']]
-	write_new_xlsx(df_datetime, FILE_DT)
+	#df_datetime = df_4_fill[['QR код контроллера', 'Дата внесения изменения']]
+	#write_new_xlsx(df_datetime, FILE_DT)
 	#-0---------------------------------------------------------------
 
 	df_4_fill = columns_repair(df_4_fill)

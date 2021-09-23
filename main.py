@@ -103,7 +103,6 @@ def main(argv):
 	df_4_fill['Положение светильника на опоре'] = repair_pole_road(list_4_check, POLE_LIST)
 	#-5.1-------------------------------------------------------------
 	
-	'''
 	# 6--
 	# Отделить существующие в системе номера
 	df_err_not_motes, df_err_in_lights_true, df_err_in_lights_false, df_4_fill = motes_no_lights(df_4_fill)
@@ -119,10 +118,7 @@ def main(argv):
 	list_deveui = df_4_fill['DevEUI'].tolist()
 	list_wrong_stat, list_wrong_stat_self = check_stat(list_deveui)
 	write_page_xlsx(pd.DataFrame(list_wrong_stat_self, columns=['deveui', 'status']), FILE_ERR_OUT, 'WrongStat')
-	df_err_bug_stat = df_4_fill[~df_4_fill['DevEUI'].isin(list_wrong_stat)]
-	write_new_xlsx(df_err_bug_stat, FILE_WR_STAT)
-	df_4_fill = df_4_fill[df_4_fill['DevEUI'].isin(list_wrong_stat)]
-	'''#-13---------------------------------------------------------------
+	#-12---------------------------------------------------------------
 
 	# 13--
 	# Записать финальный файл для заливки номеров

@@ -42,12 +42,12 @@ def check_stat(dev_list):
 		connection = psycopg2.connect("dbname='customer_01' user='lorawan' host='pg-db.vms.oug' password='ves2018'")
 		# cursor for doing something
 		cursor = connection.cursor()
-		request_motes = f"SELECT lpad(to_hex(eui), 16, '0') FROM motes WHERE status IN {STATUSES};"
+		request_motes = f"SELECT lpad(to_hex(eui), 16, '0') FROM motes WHERE status IN {STATUSES} AND lpad(to_hex(eui), 16, '0') IN {tuple(dev_list)};"
 
 		cursor.execute(request_motes)
 		_list_motes = list(map(lambda x: x[0], cursor.fetchall()))
 
-		request_motes = f"SELECT lpad(to_hex(eui), 16, '0'), status FROM motes WHERE lpad(to_hex(eui), 16, '0') IN {tuple(dev_list)};"
+		request_motes = f"SELECT lpad(to_hex(eui), 16, '0'), status FROM motes WHERE lpad(to_hex(eui), 16, '0') IN {tuple(dev_list)} AND status NOT IN {STATUSES};"
 		cursor.execute(request_motes)
 		_list_stats = list(map(lambda x: [x[0], x[1]], cursor.fetchall()))
 

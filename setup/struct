@@ -1,28 +1,27 @@
-Structures of files&folders
 
-main
+main_folder
+│
+├main.py
+├f_source.xlsx		# имя любое / файл-источник
+├f_4_fill.xlsx		# имя любое / файл для заливки (новые номера)
+│
 ├───setup
-│	├setings
-│	├
-│	└
+│	└settings.ini		# ini-файл, константы и переменные
 │
 ├───modules
-│	├r/w_xlsx.py
-│	├set_format.py
-│	├check_chars.py
-│	└check_doubles.py
+│	├__init__.py
+│	├const_var.py
+│	├modules.py
+│	└servers_base.py
 │
 ├───files
-│	├f_source.xlsx
-│	├f_4_fill.xlsx
-│	├f_4_pass.xlsx
-│	├f_err_
-│	│	├f_err_dev.xlsx
-│	│	├f_err_rfid.xlsx
-│	│	└f_err_coord
+│	├f_4_rewrite.xlsx	# файл для перезаписи (номера есть,
+│	│						# но "не доверенные")
+│	├f_err_out.xlsx		# файл с ошибками
+│	│						# (одна страница - один тип ошибок)
 │	│
-│	└f_doubles.xlsx
+│	├***f_source.xlsx		# имя любое / файл-источник
+│	└***f_4_fill.xlsx		# имя любое / файл для заливки (новые номера)
 │
 └───logs
-	├
-	└
+	└tmp_log

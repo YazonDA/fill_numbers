@@ -7,7 +7,13 @@ from modules import *
 
 # ============== MAIN ===============
 
-def main():
+def main(argv):
+	global file_source
+	global FILE_4_FILL
+	if len(argv) == 3:
+		file_source = argv[1]
+		FILE_4_FILL = argv[2]
+
 	logging.info('Main-Module is started!')
 	
 	# 1--
@@ -24,8 +30,8 @@ def main():
 	list_deveui = df_4_fill['QR код контроллера'].tolist()
 	list_repaired_deveui = repair_dev(list_deveui)
 	mask_dev = pd.Series(mask_deveui(list_repaired_deveui))
-	df_datetime = df_4_fill[['QR код контроллера', 'Дата внесения изменения']]
-	write_new_xlsx(df_datetime, FILE_DT)
+	#df_datetime = df_4_fill[['QR код контроллера', 'Дата внесения изменения']]
+	#write_new_xlsx(df_datetime, FILE_DT)
 	#-0---------------------------------------------------------------
 
 	df_4_fill = columns_repair(df_4_fill)
@@ -105,33 +111,16 @@ def main():
 	write_page_xlsx(df_err_in_lights_true, FILE_ERR_OUT, PAGE_ERR_ISIN)
 	write_new_xlsx(df_err_in_lights_false, FILE_4_REFILL)
 	#-6---------------------------------------------------------------
-	'''
-	#>>>>>
-	write_new_xlsx(df_err_in_lights_false,'ERRinLIGHTSfalse')
-	zzz = df_err_in_lights_false['DevEUI'].tolist()
-	zzz = get_table(zzz)
-	tmp_columns = NAME_LIST[:7] + NAME_LIST[8:]
-	zzz = pd.DataFrame(zzz, columns=tmp_columns)
-	zzz = zzz.sort_values(by='DevEUI')
-	zzz = re_index(zzz)
-	write_new_xlsx(zzz,'ZZZ')
-	df_err_in_lights_false = df_err_in_lights_false.sort_values(by='DevEUI')
-	df_err_in_lights_false = re_index(df_err_in_lights_false)
+	
 
-	return 0
-	#<<<<<
-	'''
 	# 12--
 	# Отделить "плохие" статусы
 	list_deveui = df_4_fill['DevEUI'].tolist()
-	list_wrong_stat, list_wrong_stat_self = check_stat(list_deveui)
-	write_page_xlsx(pd.DataFrame(list_wrong_stat_self, columns=['deveui', 'status']), FILE_ERR_OUT, 'WrongStat')
-	'''	DUPLICATE DATA
-	'''
-	df_err_bug_stat = df_4_fill[~df_4_fill['DevEUI'].isin(list_wrong_stat)]
-	write_new_xlsx(df_err_bug_stat, FILE_WR_STAT)
-	df_4_fill = df_4_fill[df_4_fill['DevEUI'].isin(list_wrong_stat)]
-	#-13---------------------------------------------------------------
+	list_correct_stat, list_wrong_stat = check_stat(list_deveui)
+	write_page_xlsx(pd.DataFrame(list_wrong_stat, columns=['deveui', 'status']), FILE_ERR_OUT, 'WrongStat')
+	df_4_fill = df_4_fill[df_4_fill['DevEUI'].isin(list_correct_stat)]
+	df_4_fill = re_index(df_4_fill)
+	#-12---------------------------------------------------------------
 
 	# 13--
 	# Записать финальный файл для заливки номеров
@@ -145,4 +134,4 @@ def main():
 
 
 if __name__ == '__main__':
-	sys.exit(main())
+	sys.exit(main(sys.argv))
